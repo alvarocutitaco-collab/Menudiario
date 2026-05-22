@@ -1,0 +1,112 @@
+{
+  "negocio": {
+    "nombre": "Chef Arturo · Cocina de Autor",
+    "whatsapp": "51999999999",
+    "ubicacion": "Av. Ejército 123, Yanahuara, Arequipa",
+    "horario": "Lunes a Sábado: 12:00 pm – 10:00 pm",
+    "instagram": "@chefarturo",
+    "moneda": "S/"
+  },
+  "categorias": ["Entradas", "Fondos", "Pastas", "Postres", "Bebidas"],
+  "platos": [
+    {
+      "id": 1,
+      "nombre": "Ceviche de Camarones",
+      "descripcion": "Camarones frescos marinados en limón, ají amarillo, cebolla roja y cilantro. Servido con choclo y camote.",
+      "precio": 28,
+      "categoria": "Entradas",
+      "emoji": "🦐",
+      "tags": ["picante", "fresco", "marino"],
+      "extras": ["Leche de tigre extra", "Choclo adicional", "Sin ají"],
+      "imagen": "https://images.unsplash.com/photo-1535400255456-984b9e455ff5?w=400&q=80"
+    },
+    {
+      "id": 2,
+      "nombre": "Causa Limeña Tricolor",
+      "descripcion": "Tres capas de causa de papa amarilla rellena de atún, pollo y mariscos. Decorada con huancaína y rocoto.",
+      "precio": 22,
+      "categoria": "Entradas",
+      "emoji": "🥗",
+      "tags": ["suave", "compartir", "peruano"],
+      "extras": ["Solo atún", "Solo pollo", "Extra huancaína"],
+      "imagen": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80"
+    },
+    {
+      "id": 3,
+      "nombre": "Lomo Saltado del Chef",
+      "descripcion": "Tiras de lomo fino salteadas con tomate, cebolla, ají amarillo y sillao. Con papas fritas y arroz blanco.",
+      "precio": 38,
+      "categoria": "Fondos",
+      "emoji": "🥩",
+      "tags": ["contundente", "clasico", "peruano"],
+      "extras": ["Arroz con leche de tigre", "Papas extra", "Sin cebolla"],
+      "imagen": "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&q=80"
+    },
+    {
+      "id": 4,
+      "nombre": "Ají de Gallina Premium",
+      "descripcion": "Gallina deshilachada en crema de ají amarillo con nueces, queso parmesano y pan de molde. Con arroz y papa.",
+      "precio": 32,
+      "categoria": "Fondos",
+      "emoji": "🍗",
+      "tags": ["suave", "cremoso", "clasico"],
+      "extras": ["Extra crema", "Sin nueces", "Papa adicional"],
+      "imagen": "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80"
+    },
+    {
+      "id": 5,
+      "nombre": "Trucha a la Macho",
+      "descripcion": "Filete de trucha andina en salsa macho de mariscos, ají panca y crema. Servida con yuca frita y ensalada.",
+      "precio": 42,
+      "categoria": "Fondos",
+      "emoji": "🐟",
+      "tags": ["marino", "picante", "especial"],
+      "extras": ["Sin picante", "Yuca extra", "Ensalada adicional"],
+      "imagen": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&q=80"
+    },
+    {
+      "id": 6,
+      "nombre": "Tagliatelle al Ragú de Res",
+      "descripcion": "Pasta artesanal con ragú lento de res, tomate San Marzano, vino tinto y hierbas frescas. Parmesano al gusto.",
+      "precio": 35,
+      "categoria": "Pastas",
+      "emoji": "🍝",
+      "tags": ["contundente", "italiano", "pasta"],
+      "extras": ["Extra parmesano", "Sin gluten (consultar)", "Pasta al dente"],
+      "imagen": "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=80"
+    },
+    {
+      "id": 7,
+      "nombre": "Tortino de Chocolate",
+      "descripcion": "Bizcocho tibio de chocolate amargo con centro fundente, helado de vainilla de Madagascar y polvo de cacao.",
+      "precio": 18,
+      "categoria": "Postres",
+      "emoji": "🍫",
+      "tags": ["dulce", "chocolate", "postre"],
+      "extras": ["Helado extra", "Sin helado", "Con fresa"],
+      "imagen": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400&q=80"
+    },
+    {
+      "id": 8,
+      "nombre": "Chicha Morada Artesanal",
+      "descripcion": "Chicha morada preparada con maíz morado andino, membrillo, piña, canela y clavo. Fría y sin conservantes.",
+      "precio": 8,
+      "categoria": "Bebidas",
+      "emoji": "🫐",
+      "tags": ["bebida", "fresco", "barato"],
+      "extras": ["Con hielo", "Sin azúcar", "Tamaño grande"],
+      "imagen": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80"
+    },
+    {
+      "id": 9,
+      "nombre": "Limonada de Albahaca",
+      "descripcion": "Limón sutil, albahaca fresca, miel de abeja y agua con gas. Refrescante y especial.",
+      "precio": 10,
+      "categoria": "Bebidas",
+      "emoji": "🍋",
+      "tags": ["bebida", "fresco", "especial"],
+      "extras": ["Sin gas", "Extra miel", "Con jengibre"],
+      "imagen": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80"
+    }
+  ]
+}
