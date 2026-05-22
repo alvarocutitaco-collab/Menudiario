@@ -618,6 +618,83 @@ body.viewer-mode .cat-unit-add{display:none!important}
 body.viewer-mode .cat-chip{padding:2px 9px}
 
 /* ════════════════════════════════════════════
+   BUSCADOR / AUTOCOMPLETE (createSearchableSelect)
+════════════════════════════════════════════ */
+.ss-wrap{position:relative;width:100%}
+/* El <select> original se mantiene en el DOM pero oculto: es la fuente de datos */
+.ss-wrap select.ss-native{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);border:0;
+}
+.ss-input{
+  width:100%;padding:11px 30px 11px 12px;
+  border:2px solid var(--cream3);
+  border-radius:var(--r3);
+  font-size:.9rem;color:var(--brown);
+  background:var(--cream);outline:none;
+  transition:border-color .15s,background .15s;
+  -webkit-appearance:none;
+  font-family:'DM Sans',sans-serif;
+}
+.ss-input:focus{border-color:var(--orange);background:#fff}
+.ss-input::placeholder{color:var(--gray)}
+.ss-input.ss-chosen{font-weight:600}
+/* Flecha indicadora */
+.ss-arrow{
+  position:absolute;right:10px;top:50%;
+  transform:translateY(-50%);
+  pointer-events:none;color:var(--gray);
+  font-size:.6rem;transition:transform .15s;
+}
+.ss-wrap.ss-open .ss-arrow{transform:translateY(-50%) rotate(180deg)}
+/* Botón limpiar (aparece cuando hay valor) */
+.ss-clear{
+  position:absolute;right:8px;top:50%;
+  transform:translateY(-50%);
+  width:18px;height:18px;border:none;border-radius:50%;
+  background:var(--cream3);color:var(--brown2);
+  font-size:.65rem;line-height:1;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  padding:0;
+}
+.ss-wrap.ss-has-value .ss-clear{display:flex}
+.ss-wrap.ss-has-value .ss-arrow{display:none}
+/* Dropdown de resultados */
+.ss-drop{
+  position:absolute;left:0;right:0;top:calc(100% + 4px);
+  background:#fff;
+  border:1.5px solid var(--cream3);
+  border-radius:var(--r3);
+  box-shadow:var(--sh2);
+  max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  z-index:120;display:none;
+  overscroll-behavior:contain;
+}
+.ss-wrap.ss-open .ss-drop{display:block}
+.ss-opt{
+  padding:10px 12px;font-size:.86rem;color:var(--brown);
+  cursor:pointer;border-bottom:1px solid var(--cream2);
+  display:flex;align-items:center;gap:6px;line-height:1.3;
+  transition:background .1s;
+}
+.ss-opt:last-child{border-bottom:none}
+.ss-opt:active{background:#FFF0E0}
+.ss-opt.ss-active{background:#FFF3E8}
+.ss-opt mark{
+  background:transparent;color:var(--orange);font-weight:700;
+}
+.ss-opt-check{color:var(--orange);font-size:.8rem;margin-left:auto;flex-shrink:0}
+.ss-empty{
+  padding:12px;font-size:.82rem;color:var(--gray);
+  text-align:center;font-style:italic;
+}
+/* Cuando el buscador está deshabilitado (ej. falta elegir categoría) */
+.ss-input:disabled{
+  background:var(--cream2);color:var(--gray);
+  cursor:not-allowed;
+}
+
+/* ════════════════════════════════════════════
    RESPONSIVE: TABLET/DESKTOP
 ════════════════════════════════════════════ */
 @media(min-width:768px){
@@ -1610,6 +1687,9 @@ function fillSelects(){
   const mkOpts=arr=>'<option value="">Seleccionar...</option>'+arr.map(n=>`<option>${n}</option>`).join('');
   document.getElementById('pp-tipo').innerHTML=mkOpts(cats.panes);
   document.getElementById('pa-tipo').innerHTML=mkOpts(cats.pasteles);
+  // Buscador con autocomplete en los selects de producto
+  aplicarBuscador(document.getElementById('pp-tipo'),'Buscar pan...');
+  aplicarBuscador(document.getElementById('pa-tipo'),'Buscar pastel...');
   // Reiniciar unidades de Producción (se llenarán al elegir el producto)
   fillUnidadSelect(document.getElementById('pp-und'),'panes','');
   fillUnidadSelect(document.getElementById('pa-und'),'pasteles','');
@@ -1658,8 +1738,217 @@ function quitarEncargado(idx){
 function fillProdSelect(){
   const cat=v('sp-cat'),s=document.getElementById('sp-prod');
   fillUnidadSelect(document.getElementById('sp-und'),null,''); // reiniciar unidad
-  if(!cat){s.innerHTML='<option value="">Seleccionar categoría...</option>';return}
+  if(!cat){
+    s.innerHTML='<option value="">Seleccionar categoría...</option>';
+    s.disabled=true;
+    aplicarBuscador(s,'Elige una categoría primero...');
+    return;
+  }
+  s.disabled=false;
   s.innerHTML='<option value="">Seleccionar...</option>'+(cat==='Panes'?cats.panes:cats.pasteles).map(n=>`<option>${n}</option>`).join('');
+  aplicarBuscador(s,'Buscar producto...');
+}
+
+// ════════════════════════════════════════════
+// BUSCADOR / AUTOCOMPLETE REUTILIZABLE
+// createSearchableSelect(select) → envuelve un <select> con un buscador.
+// El <select> original SE MANTIENE (oculto) como fuente de verdad: así
+// v(), .value, leerLineas(), el evento change y todo lo demás siguen igual.
+// ════════════════════════════════════════════
+
+// Normaliza texto para búsqueda: minúsculas y sin acentos
+function ssNorm(s){
+  return String(s==null?'':s).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+// Resalta las coincidencias del término dentro de un texto (seguro para HTML)
+function ssHighlight(texto,termNorm){
+  const esc=escAttr(texto);
+  if(!termNorm)return esc;
+  const tNorm=ssNorm(texto);
+  let i=tNorm.indexOf(termNorm);
+  if(i<0)return esc;
+  // Mapear índices del texto normalizado al texto original (misma longitud por carácter)
+  return esc.slice(0,i)+'<mark>'+esc.slice(i,i+termNorm.length)+'</mark>'+esc.slice(i+termNorm.length);
+}
+
+// Envuelve un <select>. Idempotente: si ya está envuelto, solo refresca opciones.
+function createSearchableSelect(sel){
+  if(!sel)return null;
+  // Si ya fue inicializado, refrescar opciones y salir
+  if(sel._ss){sel._ss.refresh();return sel._ss}
+
+  const wrap=document.createElement('div');
+  wrap.className='ss-wrap';
+  sel.parentNode.insertBefore(wrap,sel);
+  wrap.appendChild(sel);
+  sel.classList.add('ss-native');
+  sel.tabIndex=-1; // se navega por el input, no por el select
+
+  const input=document.createElement('input');
+  input.type='text';
+  input.className='ss-input';
+  input.autocomplete='off';
+  input.setAttribute('autocapitalize','off');
+  input.setAttribute('autocorrect','off');
+  input.setAttribute('inputmode','search');
+  input.placeholder=sel.dataset.ssPlaceholder||'Escribe para buscar...';
+
+  const arrow=document.createElement('span');
+  arrow.className='ss-arrow';arrow.textContent='▼';
+
+  const clearBtn=document.createElement('button');
+  clearBtn.type='button';clearBtn.className='ss-clear';clearBtn.textContent='✕';
+  clearBtn.setAttribute('aria-label','Limpiar');
+
+  const drop=document.createElement('div');
+  drop.className='ss-drop';
+
+  wrap.appendChild(input);
+  wrap.appendChild(arrow);
+  wrap.appendChild(clearBtn);
+  wrap.appendChild(drop);
+
+  let activeIdx=-1;   // opción resaltada por teclado
+  let filtered=[];    // [{value,label}] visibles actualmente
+
+  // Lee las opciones reales del <select> (ignora el placeholder de value vacío)
+  function opciones(){
+    return Array.from(sel.options)
+      .filter(o=>o.value!=='' || (o.value===''&&o.textContent&&false))
+      .map(o=>({value:o.value,label:o.textContent}))
+      .filter(o=>o.value!=='');
+  }
+  // Sincroniza el input con el valor actual del <select>
+  function syncFromSelect(){
+    const val=sel.value;
+    if(val){input.value=val;input.classList.add('ss-chosen');wrap.classList.add('ss-has-value');}
+    else{input.value='';input.classList.remove('ss-chosen');wrap.classList.remove('ss-has-value');}
+  }
+  // Pinta el dropdown según el término escrito
+  function render(term){
+    const tNorm=ssNorm(term);
+    const all=opciones();
+    filtered = tNorm ? all.filter(o=>ssNorm(o.label).includes(tNorm)) : all;
+    activeIdx=-1;
+    if(!all.length){
+      drop.innerHTML='<div class="ss-empty">No hay opciones en el catálogo</div>';
+      return;
+    }
+    if(!filtered.length){
+      drop.innerHTML='<div class="ss-empty">Sin coincidencias para “'+escAttr(term)+'”</div>';
+      return;
+    }
+    const cur=sel.value;
+    drop.innerHTML=filtered.map((o,i)=>
+      `<div class="ss-opt" data-i="${i}">`+
+        `<span>${ssHighlight(o.label,tNorm)}</span>`+
+        (o.value===cur?'<span class="ss-opt-check">✔</span>':'')+
+      `</div>`
+    ).join('');
+  }
+  function abrir(){
+    if(sel.disabled)return;
+    render(input.classList.contains('ss-chosen')?'':input.value);
+    wrap.classList.add('ss-open');
+  }
+  function cerrar(){
+    wrap.classList.remove('ss-open');
+    activeIdx=-1;
+    // Si quedó texto escrito sin selección válida, restaurar al valor real
+    if(!input.classList.contains('ss-chosen'))syncFromSelect();
+  }
+  // Elige una opción: actualiza el <select> y dispara su evento change
+  function elegir(o){
+    sel.value=o.value;
+    syncFromSelect();
+    cerrar();
+    sel.dispatchEvent(new Event('change',{bubbles:true}));
+  }
+  function marcar(i){
+    const items=drop.querySelectorAll('.ss-opt');
+    items.forEach(el=>el.classList.remove('ss-active'));
+    if(i>=0&&i<items.length){
+      items[i].classList.add('ss-active');
+      if(items[i].scrollIntoView)items[i].scrollIntoView({block:'nearest'});
+    }
+  }
+
+  // ——— Eventos ———
+  input.addEventListener('focus',abrir);
+  input.addEventListener('click',abrir);
+  input.addEventListener('input',()=>{
+    input.classList.remove('ss-chosen');
+    wrap.classList.remove('ss-has-value');
+    wrap.classList.add('ss-open');
+    render(input.value);
+  });
+  input.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'){
+      e.preventDefault();
+      if(!wrap.classList.contains('ss-open'))abrir();
+      activeIdx=Math.min(activeIdx+1,filtered.length-1);marcar(activeIdx);
+    }else if(e.key==='ArrowUp'){
+      e.preventDefault();
+      activeIdx=Math.max(activeIdx-1,0);marcar(activeIdx);
+    }else if(e.key==='Enter'){
+      if(wrap.classList.contains('ss-open')){
+        e.preventDefault();
+        if(activeIdx>=0&&filtered[activeIdx])elegir(filtered[activeIdx]);
+        else if(filtered.length===1)elegir(filtered[0]);
+      }
+    }else if(e.key==='Escape'){
+      cerrar();input.blur();
+    }
+  });
+  // Tap/click en una opción (mousedown para ganarle al blur del input)
+  drop.addEventListener('mousedown',e=>{
+    const opt=e.target.closest('.ss-opt');
+    if(!opt)return;
+    e.preventDefault();
+    const o=filtered[parseInt(opt.dataset.i)];
+    if(o)elegir(o);
+  });
+  // Cerrar al perder foco (con pequeño retardo para permitir el tap)
+  input.addEventListener('blur',()=>{setTimeout(()=>{if(!wrap.contains(document.activeElement))cerrar();},120)});
+  // Botón limpiar
+  clearBtn.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    sel.value='';
+    syncFromSelect();
+    sel.dispatchEvent(new Event('change',{bubbles:true}));
+    input.focus();render('');wrap.classList.add('ss-open');
+  });
+
+  const api={
+    el:wrap,
+    // Vuelve a leer opciones y estado desde el <select> (llamar tras cambiar sus <option>)
+    refresh(){
+      input.disabled=sel.disabled;
+      input.placeholder=sel.dataset.ssPlaceholder||input.placeholder;
+      syncFromSelect();
+      if(wrap.classList.contains('ss-open'))render(input.value);
+    }
+  };
+  sel._ss=api;
+  // Si algo cambia el <select> programáticamente, reflejarlo en el input
+  sel.addEventListener('change',()=>{if(document.activeElement!==input)syncFromSelect()});
+  syncFromSelect();
+  return api;
+}
+// Aplica el buscador a un <select> y/o lo refresca si ya existía
+function aplicarBuscador(sel,placeholder){
+  if(!sel)return;
+  if(placeholder)sel.dataset.ssPlaceholder=placeholder;
+  if(sel._ss)sel._ss.refresh();
+  else createSearchableSelect(sel);
+}
+// Re-sincroniza todos los buscadores activos con el valor de su <select>.
+// Útil tras resets que cambian selectedIndex sin disparar 'change'.
+function refreshAllBuscadores(){
+  document.querySelectorAll('select.ss-native').forEach(sel=>{
+    if(sel._ss)sel._ss.refresh();
+  });
 }
 
 // ════════════════════════════════════════════
@@ -1679,8 +1968,20 @@ function mkInsLine(uid,containerId,showPrecio){
     <button class="row-ins-del" onclick="document.getElementById('${containerId}-line-${uid}').remove()">✕ Quitar este insumo</button>
   </div>`;
 }
-function addLineaEntrada(){lineaEntCnt++;document.getElementById('lineas-entrada').insertAdjacentHTML('beforeend',mkInsLine(lineaEntCnt,'lineas-entrada',true))}
-function addLineaSalidaIns(){lineaSalCnt++;document.getElementById('lineas-salida-ins').insertAdjacentHTML('beforeend',mkInsLine(lineaSalCnt,'lineas-salida-ins',false))}
+function addLineaEntrada(){
+  lineaEntCnt++;
+  const cont=document.getElementById('lineas-entrada');
+  cont.insertAdjacentHTML('beforeend',mkInsLine(lineaEntCnt,'lineas-entrada',true));
+  const li=document.querySelector('#lineas-entrada-line-'+lineaEntCnt+' .li');
+  aplicarBuscador(li,'Buscar insumo...');
+}
+function addLineaSalidaIns(){
+  lineaSalCnt++;
+  const cont=document.getElementById('lineas-salida-ins');
+  cont.insertAdjacentHTML('beforeend',mkInsLine(lineaSalCnt,'lineas-salida-ins',false));
+  const li=document.querySelector('#lineas-salida-ins-line-'+lineaSalCnt+' .li');
+  aplicarBuscador(li,'Buscar insumo...');
+}
 function leerLineas(containerId){
   return Array.from(document.querySelectorAll('#'+containerId+' .row-ins')).map(row=>({
     insumo:row.querySelector('.li')?.value||'',unidad:row.querySelector('.lu')?.value||'',
@@ -1769,6 +2070,7 @@ async function guardarProd(tipo){
   const data={tipo,fecha:v(pre+'-fecha')||hoy(),turno:v(pre+'-turno'),producto:v(pre+'-tipo'),unidad:v(pre+'-und'),cantidad:cant,defectuosa:def,neto:cant-def,obs:v(pre+'-obs')};
   const id=await dbAdd('produccion',data);await cloudAdd('produccion',id,data);
   [pre+'-turno',pre+'-tipo',pre+'-und',pre+'-cant',pre+'-def',pre+'-obs'].forEach(id=>{const el=document.getElementById(id);if(el.tagName==='SELECT')el.selectedIndex=0;else el.value=''});
+  refreshAllBuscadores();
   toast('✅ Producción registrada');renderProd();
 }
 async function renderProd(){
@@ -1800,6 +2102,7 @@ async function guardarSalidaProd(){
   const data={fecha:v('sp-fecha')||hoy(),categoria:v('sp-cat'),producto:v('sp-prod'),unidad:v('sp-und'),cantidad:parseFloat(v('sp-cant'))||0,destino:v('sp-dest'),encargado:v('sp-encargado'),documento:v('sp-doc'),obs:v('sp-obs')};
   const id=await dbAdd('salida_prod',data);await cloudAdd('salida_prod',id,data);
   ['sp-cat','sp-prod','sp-und','sp-cant','sp-dest','sp-encargado','sp-doc','sp-obs'].forEach(id=>{const el=document.getElementById(id);if(el.tagName==='SELECT')el.selectedIndex=0;else el.value=''});
+  refreshAllBuscadores();
   toast('✅ Salida registrada');renderSalidaProd();fillProdSelect();
 }
 async function renderSalidaProd(){
