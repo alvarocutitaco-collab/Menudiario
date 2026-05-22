@@ -1,135 +1,192 @@
-# Chef Arturo · Cocina de Autor
-## Sitio web gastronómico completo
+[README.md](https://github.com/user-attachments/files/28161094/README.md)
+# Restaurante web con Chef IA
 
----
+Sitio estatico con carta digital, menu del dia, pedidos por WhatsApp, Chef IA conectado a OpenAI y panel administrador con Decap CMS.
 
-## 📁 ESTRUCTURA DE ARCHIVOS
+## Estructura
 
+```txt
+index.html
+styles.css
+app.js
+data/menu.json
+data/menu-dia.json
+assets/img/
+api/chef-chat.js                  # Funcion serverless para Vercel
+netlify/functions/chef-chat.cjs   # Funcion serverless para Netlify
+serverless/chefChatCore.cjs       # Logica segura de OpenAI
+admin/                            # Panel Decap CMS
+netlify.toml
 ```
-restaurante/
-├── index.html          ← Página principal (no tocar estructura)
-├── styles.css          ← Todos los estilos visuales
-├── app.js              ← Toda la lógica (carta, chatbot, IA, carrito)
-├── data/
-│   ├── menu.json       ← ✏️ AQUÍ editas la carta completa
-│   └── menu-dia.json   ← ✏️ AQUÍ editas el menú del día (cambiar diario)
-├── assets/
-│   └── img/            ← Coloca aquí tus fotos de platos
-└── README.md           ← Esta guía
+
+## Seguridad de la API key
+
+La clave de OpenAI nunca debe ir en `app.js`, `index.html`, GitHub ni ningun archivo publico.
+
+La funcion `/api/chef-chat` lee la clave desde esta variable de entorno:
+
+```txt
+OPENAI_API_KEY
 ```
 
----
+Opcionalmente puedes definir:
 
-## ✏️ CÓMO PERSONALIZAR (sin saber programar)
+```txt
+OPENAI_MODEL=gpt-4.1-mini
+```
 
-### 1. Cambiar nombre, WhatsApp, horario y ubicación
-Abre `data/menu.json` y edita la sección "negocio" al inicio:
+Si no defines `OPENAI_MODEL`, se usa `gpt-4.1-mini`.
+
+## Configurar en Netlify
+
+1. Sube este proyecto a GitHub.
+2. En Netlify, crea un sitio desde ese repositorio.
+3. En `Site configuration` > `Environment variables`, agrega:
+   - `OPENAI_API_KEY`
+   - opcional: `OPENAI_MODEL`
+4. Publica el sitio.
+5. Netlify usara `netlify.toml` para servir la web y redirigir `/api/chef-chat` a la funcion segura.
+
+## Configurar en Vercel
+
+1. Importa el repositorio en Vercel.
+2. En `Project Settings` > `Environment Variables`, agrega:
+   - `OPENAI_API_KEY`
+   - opcional: `OPENAI_MODEL`
+3. Publica el proyecto.
+4. Vercel usara automaticamente `api/chef-chat.js` como endpoint `/api/chef-chat`.
+
+## Probar localmente
+
+Necesitas Node.js.
+
+Para Netlify:
+
+```bash
+npx netlify-cli dev
+```
+
+Antes de ejecutar, define la variable:
+
+```powershell
+$env:OPENAI_API_KEY="tu_api_key"
+npx netlify-cli dev
+```
+
+Para Vercel:
+
+```powershell
+$env:OPENAI_API_KEY="tu_api_key"
+npx vercel dev
+```
+
+Luego abre la URL local que indique la terminal y prueba el Chef IA o el chatbot.
+
+## Editar la carta
+
+Edita `data/menu.json`.
+
+Los datos del negocio estan en `negocio`:
 
 ```json
-"negocio": {
-  "nombre": "TU NOMBRE AQUÍ",
-  "whatsapp": "51999999999",        ← Número con código de país (51 = Perú)
-  "ubicacion": "Tu dirección aquí",
-  "horario": "Lun a Vie: 12pm - 9pm",
+{
+  "nombre": "Nombre del restaurante",
+  "whatsapp": "51999999999",
+  "ubicacion": "Direccion",
+  "horario": "Lunes a Domingo: 11:00 am - 4:00 pm",
+  "instagram": "@usuario",
   "moneda": "S/"
 }
 ```
 
-### 2. Agregar o editar platos en la carta
-En `data/menu.json`, en la sección "platos", cada plato tiene esta estructura:
+Cada plato necesita:
 
 ```json
 {
-  "id": 10,                          ← Número único (incrementar)
+  "id": 1,
   "nombre": "Nombre del plato",
-  "descripcion": "Descripción corta y apetitosa",
-  "precio": 25,                      ← Precio en números (sin símbolo)
-  "categoria": "Fondos",             ← Debe coincidir con alguna categoría
-  "emoji": "🍖",                     ← Emoji representativo
-  "tags": ["contundente", "clasico"],← Para el recomendador IA
-  "extras": ["Sin sal", "Extra salsa"],← Opciones de personalización
-  "imagen": "https://url-de-imagen.jpg" ← URL de imagen o ruta local
+  "descripcion": "Descripcion corta",
+  "precio": 25,
+  "categoria": "Fondos",
+  "emoji": "🍽️",
+  "tags": ["picante", "contundente"],
+  "extras": ["Sin aji", "Extra queso"],
+  "imagen": "./assets/img/plato.jpg"
 }
 ```
 
-**Tags disponibles para Chef IA:**
-`picante` | `barato` | `compartir` | `contundente` | `fresco` | `marino` | `dulce` | `clasico` | `peruano` | `pasta` | `italiano` | `postre` | `bebida` | `especial`
+Importante: cada `id` debe ser unico. El Chef IA solo puede recomendar platos que existan en este JSON.
 
-### 3. Cambiar el Menú del Día
-Abre `data/menu-dia.json` y edita:
+## Editar el menu del dia
+
+Edita `data/menu-dia.json`.
 
 ```json
 {
-  "disponible": true,    ← Cambiar a false cuando se acabe
-  "precio": 25,
-  "entrada": { "nombre": "Nombre", "descripcion": "Descripción" },
-  "fondo":   { "nombre": "Nombre", "descripcion": "Descripción" },
-  "postre":  { "nombre": "Nombre", "descripcion": "Descripción" },
-  "bebida":  { "nombre": "Nombre", "descripcion": "Descripción" },
-  "nota": "Incluye pan artesanal"
+  "fecha": "2026-05-22",
+  "disponible": true,
+  "precio": 22,
+  "titulo": "Menu del Dia",
+  "entrada": { "nombre": "Entrada", "descripcion": "Descripcion" },
+  "fondo": { "nombre": "Fondo", "descripcion": "Descripcion" },
+  "postre": { "nombre": "Postre", "descripcion": "Descripcion" },
+  "bebida": { "nombre": "Bebida", "descripcion": "Descripcion" }
 }
 ```
 
-**Para marcar como agotado:** cambia `"disponible": false`
+Para marcarlo como agotado:
 
-### 4. Usar imágenes propias
-Coloca tus fotos en la carpeta `assets/img/` y en el JSON usa:
 ```json
-"imagen": "./assets/img/mi-plato.jpg"
+"disponible": false
 ```
 
----
+## Panel administrador
 
-## 🚀 PUBLICAR GRATIS (GitHub + Netlify)
+Se agrego un panel en:
 
-### Paso 1: Crear cuenta en GitHub
-1. Ve a https://github.com → Sign Up (gratis)
-2. Crea un nuevo repositorio (New repository)
-3. Nómbralo: `mi-restaurante`
+```txt
+/admin
+```
 
-### Paso 2: Subir archivos
-1. En el repositorio recién creado, haz clic en "uploading an existing file"
-2. Arrastra toda la carpeta `restaurante/` o los archivos
-3. Escribe un mensaje como "Primera versión del sitio"
-4. Haz clic en "Commit changes"
+El panel usa Decap CMS con Netlify Identity y Git Gateway. Permite editar:
 
-### Paso 3: Publicar en Netlify
-1. Ve a https://netlify.com → Sign Up con tu cuenta de GitHub (gratis)
-2. Haz clic en "Add new site" → "Import an existing project"
-3. Selecciona GitHub → selecciona tu repositorio
-4. Haz clic en "Deploy site"
-5. ¡Listo! Te dará una URL como `https://tu-restaurante.netlify.app`
+- Carta completa: nombre, descripcion, precio, categoria, imagen, tags y extras.
+- Menu del dia: entrada, fondo, postre, bebida, precio, fecha y disponibilidad.
+- Datos del negocio: WhatsApp, horario, ubicacion e Instagram.
 
-### Para actualizar el menú:
-Edita los archivos JSON en GitHub directamente desde el navegador y los cambios se publican en 1-2 minutos automáticamente.
+## Como activar el panel en Netlify
 
----
+1. En Netlify, entra a `Site configuration` > `Identity` y habilita Identity.
+2. En `Registration`, elige `Invite only` para que nadie se registre libremente.
+3. En `Services`, habilita `Git Gateway`.
+4. Invita el correo del administrador desde Identity.
+5. Entra a `https://tu-sitio.netlify.app/admin`.
 
-## 📱 FUNCIONES INCLUIDAS
+## Que usar para guardar cambios desde un sitio estatico
 
-| Función | Descripción |
-|---------|-------------|
-| 🛒 Carta digital | Fotos, precios, categorías, extras, notas por plato |
-| 🔢 Cantidades | Aumentar/disminuir desde la carta |
-| ✦ Personalizar | Modal con extras y nota especial por plato |
-| 💬 Envío WhatsApp | Pedido formateado automáticamente |
-| 🍽 Menú del día | Configurable desde JSON, con botón WhatsApp |
-| 😞 Agotado | Muestra banner cuando disponible=false |
-| 🤖 Chef IA | 8 estados de ánimo + búsqueda libre de texto |
-| 💬 Chatbot | Horarios, ubicación, delivery, pagos, menú del día |
-| 📱 Responsive | Optimizado para celular |
-| 🎨 Diseño | Estética editorial de alta cocina |
+Si publicas solo en GitHub Pages o como HTML estatico puro, el panel no puede guardar cambios de forma segura por si solo. Un frontend estatico no debe tener tokens privados para escribir en GitHub.
 
----
+Opciones:
 
-## 🔮 PRÓXIMOS PASOS (cuando estés listo)
+- Recomendado: Netlify + Decap CMS + Netlify Identity/Git Gateway. Es lo mas simple y seguro para alguien que no programa. El admin edita contenido, Decap hace commits al repositorio y Netlify republica.
+- Supabase o Firebase: utiles si quieres una base de datos y cambios inmediatos, pero requieren mas configuracion y reglas de seguridad.
+- GitHub API directa: no recomendado para principiantes, porque necesitas proteger tokens y permisos.
+- Netlify Forms: sirve para recibir formularios, no para editar y guardar una carta completa.
 
-- **Fotos propias:** Reemplaza las URLs de Unsplash por fotos de tus platos reales
-- **Dominio propio:** En Netlify puedes conectar un dominio como `www.chefarturo.pe` (~$12/año)
-- **Chef IA con IA real:** Conectar a Claude API para recomendaciones inteligentes
-- **Reservas online:** Integrar Calendly o similar
-- **Galería:** Agregar sección de fotos del local
+Para este proyecto recomiendo Netlify + Decap CMS.
 
----
+## Chef IA
 
-*Desarrollado con HTML, CSS y JavaScript puro. Sin frameworks. Sin costos de servidor.*
+`app.js` envia los mensajes a `/api/chef-chat`.
+
+La funcion serverless:
+
+- Lee `data/menu.json` y `data/menu-dia.json`.
+- Usa `OPENAI_API_KEY` desde variables de entorno.
+- Envia un prompt de sistema que obliga al Chef IA a recomendar solo platos reales.
+- Maneja errores y devuelve una respuesta amable para ofrecer WhatsApp si falla la API.
+
+Referencias oficiales:
+
+- OpenAI Responses API: https://platform.openai.com/docs/api-reference/responses
+- OpenAI Quickstart y variables de entorno: https://platform.openai.com/docs/quickstart
