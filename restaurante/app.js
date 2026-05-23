@@ -10,6 +10,9 @@ let CONFIG  = {};
 let MENU    = [];
 let CART    = [];    // [{platoId, nombre, precio, qty, extras:[], nota, emoji}]
 let MODAL_PLATO = null;
+let CHAT_HISTORY = [];
+
+const CHEF_CHAT_ENDPOINT = '/api/chef-chat';
 
 /* ─── UTILIDADES ────────────────────────────────────────────────────── */
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
@@ -31,6 +34,21 @@ function toast(msg) {
 
 function formatMoney(n) {
   return CONFIG.moneda + ' ' + Number(n).toFixed(2);
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderBotText(text) {
+  return escapeHtml(text)
+    .replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
 }
 
 /* ─── CARGA DE DATOS ────────────────────────────────────────────────── */
@@ -687,14 +705,24 @@ $$('.quick-btn').forEach(btn => {
   });
 });
 
-function sendChatMessage() {
+async function sendChatMessage() {
   const input = document.getElementById('chatbot-input');
   const msg = input.value.trim();
   if (!msg) return;
   input.value = '';
   addUserMessage(msg);
+
+  const typing = addBotThinking();
+  const aiReply = await askChefChat(msg);
+  typing.remove();
+
+  if (aiReply) {
+    addBotMessage(aiReply, { showWhatsApp: shouldOfferWhatsApp(aiReply) });
+    return;
+  }
+
   const intent = chatbotDetectIntent(msg);
-  setTimeout(() => respondToIntent(intent), 500);
+  respondToIntent(intent);
 }
 
 function addUserMessage(text) {
@@ -705,22 +733,63 @@ function addUserMessage(text) {
   scrollChatToBottom();
 }
 
-function addBotMessage(text) {
+function addBotThinking() {
+  const div = document.createElement('div');
+  div.className = 'msg msg-bot';
+  div.textContent = 'Chef IA esta pensando...';
+  document.getElementById('chatbot-messages').appendChild(div);
+  scrollChatToBottom();
+  return div;
+}
+
+function addBotMessage(text, options = {}) {
   const div = document.createElement('div');
   div.className = 'msg msg-bot';
   // Convertir *texto* en negrita
-  div.innerHTML = text.replace(/\*([^*]+)\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  div.innerHTML = renderBotText(text);
   document.getElementById('chatbot-messages').appendChild(div);
   scrollChatToBottom();
 
   // Botón de WhatsApp al final de respuestas relevantes
-  if (['menu','pedido','delivery','default'].includes(currentIntent)) {
+  if (options.showWhatsApp || ['menu','pedido','delivery','default'].includes(currentIntent)) {
     const waDiv = document.createElement('div');
     waDiv.className = 'msg msg-bot';
     waDiv.innerHTML = `<a href="https://wa.me/${CONFIG.whatsapp}" target="_blank" class="btn btn-whatsapp" style="font-size:.8rem;padding:8px 16px;">📲 Escribir al WhatsApp</a>`;
     document.getElementById('chatbot-messages').appendChild(waDiv);
     scrollChatToBottom();
   }
+}
+
+async function askChefChat(message) {
+  try {
+    const response = await fetch(CHEF_CHAT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        history: CHAT_HISTORY.slice(-8)
+      })
+    });
+
+    if (!response.ok) throw new Error('Chef IA no disponible');
+
+    const data = await response.json();
+    if (!data.reply) throw new Error('Respuesta vacia');
+
+    CHAT_HISTORY.push({ role: 'user', content: message });
+    CHAT_HISTORY.push({ role: 'assistant', content: data.reply });
+    CHAT_HISTORY = CHAT_HISTORY.slice(-10);
+
+    return data.reply;
+  } catch (error) {
+    console.warn('Chef IA usando respaldo local:', error);
+    return null;
+  }
+}
+
+function shouldOfferWhatsApp(text) {
+  const lower = text.toLowerCase();
+  return ['whatsapp', 'reserva', 'reservar', 'pedido', 'pedir', 'delivery', 'confirmar'].some(word => lower.includes(word));
 }
 
 let currentIntent = '';

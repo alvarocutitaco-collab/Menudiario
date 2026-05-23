@@ -1,0 +1,8 @@
+[build]
+  publish = "restaurante"
+  functions = "restaurante/netlify/functions"
+
+[[redirects]]
+  from = "/api/chef-chat"
+  to = "/.netlify/functions/chef-chat"
+  status = 200
