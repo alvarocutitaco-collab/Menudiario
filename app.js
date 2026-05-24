@@ -67,7 +67,7 @@ async function loadData() {
     applyConfig();
     renderCategorias(menuData.categorias);
     renderMenu(MENU);
-    renderMenuDia(diaData);
+    renderMenuDiaOffers(diaData);
 
   } catch (e) {
     console.error('Error cargando datos:', e);
@@ -420,6 +420,86 @@ function closeModal() {
 }
 
 /* ─── MENÚ DEL DÍA ──────────────────────────────────────────────────── */
+async function renderMenuDiaOffers(d) {
+  const card = document.getElementById('menu-dia-card');
+  const entradas = d.entradas || (d.entrada ? [d.entrada] : []);
+  const fondos = d.fondos || (d.fondo ? [d.fondo] : []);
+  const bebida = d.bebida;
+
+  const headerHtml = `
+    <div class="menu-dia-header">
+      <h3>${d.titulo}</h3>
+      <p>${d.subtitulo}</p>
+      <div class="menu-dia-precio">${formatMoney(d.precio)}</div>
+    </div>
+  `;
+
+  if (!d.disponible) {
+    card.innerHTML = `
+      ${headerHtml}
+      <div class="menu-dia-agotado">😞 Menú del día agotado por hoy.<br/>¡Mañana volvemos con más!</div>
+    `;
+    return;
+  }
+
+  const optionHtml = (item, tipo) => `
+    <article class="menu-dia-option">
+      ${item.imagen
+        ? `<img class="menu-dia-option-img" src="${item.imagen}" alt="${escapeHtml(item.nombre)}" loading="lazy">`
+        : `<div class="menu-dia-option-placeholder">${item.emoji || '🍽️'}</div>`
+      }
+      <div class="menu-dia-option-body">
+        <div class="menu-dia-option-type">${tipo}</div>
+        <strong>${item.emoji || ''} ${item.nombre}</strong>
+        <span>${item.descripcion}</span>
+      </div>
+    </article>
+  `;
+
+  card.innerHTML = `
+    ${headerHtml}
+    <div class="menu-dia-body">
+      <div class="menu-dia-group">
+        <h4>Elige una entrada</h4>
+        <div class="menu-dia-options menu-dia-options-entrada">
+          ${entradas.map(item => optionHtml(item, 'Entrada')).join('')}
+        </div>
+      </div>
+      <div class="menu-dia-group">
+        <h4>Elige un plato de fondo</h4>
+        <div class="menu-dia-options">
+          ${fondos.map(item => optionHtml(item, 'Fondo')).join('')}
+        </div>
+      </div>
+      ${bebida ? `
+      <div class="menu-dia-group">
+        <h4>Bebida incluida</h4>
+        <div class="menu-dia-options menu-dia-options-bebida">
+          ${optionHtml(bebida, 'Bebida')}
+        </div>
+      </div>` : ''}
+      ${d.nota ? `<p class="menu-dia-nota">✦ ${d.nota}</p>` : ''}
+    </div>
+    <div class="menu-dia-actions">
+      <button class="btn btn-whatsapp btn-full" id="menu-dia-wa-btn">
+        Pedir Menú del Día por WhatsApp
+      </button>
+    </div>
+  `;
+
+  document.getElementById('menu-dia-wa-btn').addEventListener('click', () => {
+    const entradasTexto = entradas.map(item => `• ${item.nombre}`).join('\n');
+    const fondosTexto = fondos.map(item => `• ${item.nombre}`).join('\n');
+    const msg = `🍽 *Menú del Día — ${CONFIG.nombre}*\n\n` +
+      `*Entradas disponibles:*\n${entradasTexto}\n\n` +
+      `*Fondos disponibles:*\n${fondosTexto}\n\n` +
+      (bebida ? `*Bebida:* ${bebida.nombre}\n\n` : '') +
+      `*Total: ${formatMoney(d.precio)}*\n\n` +
+      `_Quiero pedir el Menú del Día. Por favor confirmen disponibilidad para elegir entrada y fondo 🙏_`;
+    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+  });
+}
+
 async function renderMenuDia(d) {
   const card = document.getElementById('menu-dia-card');
 
@@ -698,7 +778,11 @@ const CHATBOT_RESPONSES = {
     const dia = window._menuDiaData;
     if (!dia) return '🍽 El menú del día cambia cada jornada. ¡Pregúntanos directamente por WhatsApp!';
     if (!dia.disponible) return '😞 El menú del día está *agotado* por hoy. ¡Mañana volvemos con más!';
-    return `🍽 *Menú del Día — ${formatMoney(dia.precio)}:*\n🥣 ${dia.entrada.nombre}\n🍲 ${dia.fondo.nombre}\n🥤 ${dia.bebida.nombre}\n\n¿Lo pedimos?`;
+    const entradas = dia.entradas || (dia.entrada ? [dia.entrada] : []);
+    const fondos = dia.fondos || (dia.fondo ? [dia.fondo] : []);
+    const entradasTexto = entradas.map(item => `• ${item.nombre}`).join('\n');
+    const fondosTexto = fondos.map(item => `• ${item.nombre}`).join('\n');
+    return `🍽 *Menú del Día — ${formatMoney(dia.precio)}*\n\n*Entradas:*\n${entradasTexto}\n\n*Fondos:*\n${fondosTexto}\n\n🥤 ${dia.bebida.nombre}\n\nPuedes elegir 1 entrada + 1 fondo. ¿Lo pedimos por WhatsApp?`;
   },
 
   pedido: () =>
