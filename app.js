@@ -750,7 +750,14 @@ function displayIaTextResult(titulo, text) {
 /* ─── CHATBOT ───────────────────────────────────────────────────────── */
 function fallbackBridgeResponse(message = '') {
   const lower = message.toLowerCase();
+  const wantsReservation = [
+    'reserv', 'mesa', 'separ', 'quiero ir', 'me interesa', 'somos', 'personas',
+    'para hoy', 'para mañana', 'viernes', 'sabado', 'sábado', 'domingo',
+    'hora', 'p.m', 'pm', 'a las'
+  ].some(word => lower.includes(word));
   const preferTags = [
+    ['sueño', 'fresco'],
+    ['sueno', 'fresco'],
     ['jefe', 'contundente'],
     ['grit', 'contundente'],
     ['jalé', 'dulce'],
@@ -781,10 +788,17 @@ function fallbackBridgeResponse(message = '') {
   const plato = MENU.find(p => (p.tags || []).includes(tag)) || MENU[0];
 
   if (!plato) {
-    return 'Ufff, te leo 😅 Eso merece una pausa rica. Para llevarlo a la mesa, miraría el Menú del Día o algo de la carta. ¿Para qué fecha, hora y cuántas personas te gustaría reservar?';
+    if (wantsReservation) {
+      return 'Me gusta ese plan 😌 Para ver disponibilidad real, dime fecha, hora y cuántas personas serían.';
+    }
+    return 'Ufff, te leo 😅 Eso merece una pausa rica. Para llevarlo a la mesa, miraría el Menú del Día o algo fresco de la carta. ¿Prefieres algo ligero o contundente?';
   }
 
-  return `Ufff, te entiendo 😅 Eso pide una pausa rica. Para levantar el ánimo, te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Te gustaría reservar? Dime fecha, hora y cuántas personas serían.`;
+  if (wantsReservation) {
+    return `Me gusta ese plan 😌 Para esa experiencia te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. Para revisar disponibilidad, dime fecha, hora y cuántas personas serían.`;
+  }
+
+  return `Ufff, te entiendo 😅 Eso pide una pausa rica, no presión. Para acompañarte, te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Te provoca algo ligero y fresco o algo más contundente?`;
 }
 
 const CHATBOT_RESPONSES = {
