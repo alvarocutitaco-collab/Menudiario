@@ -50,5 +50,39 @@
     "emoji": "🥤",
     "imagen": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500&q=80"
   },
-  "nota": "Oferta válida hasta agotar stock · Atención de 11am a 4pm"
+  "nota": "Oferta válida hasta agotar stock · Atención de 11am a 4pm",
+  "menusPorFecha": [
+    {
+      "fecha": "2026-05-24",
+      "titulo": "Menú del Día",
+      "precio": 22,
+      "entradas": ["Ocopa Arequipeña", "Solterito de Queso"],
+      "fondos": ["Adobo de Chancho", "Rocoto Relleno con Pastel de Papa", "Ají de Gallina Arequipeño", "Tallarín Saltado Picantero"],
+      "bebida": "Chicha de Jora o Refresco del Día"
+    },
+    {
+      "fecha": "2026-05-25",
+      "titulo": "Menú del Lunes",
+      "precio": 22,
+      "entradas": ["Escribano Arequipeño", "Cauche de Queso"],
+      "fondos": ["Pebre de Gallina", "Locro de Pecho", "Milanesa de Pollo con Pastel de Papa", "Seco de Res al Huacatay"],
+      "bebida": "Refresco de Airampo"
+    },
+    {
+      "fecha": "2026-05-29",
+      "titulo": "Menú del Viernes",
+      "precio": 24,
+      "entradas": ["Ocopa Arequipeña", "Ceviche de Camarones del Río"],
+      "fondos": ["Chupe de Camarones", "Arroz con Mariscos al Rocoto", "Rocoto Relleno con Pastel de Papa", "Tallarín Saltado Picantero"],
+      "bebida": "Chicha de Jora o Refresco del Día"
+    },
+    {
+      "fecha": "2026-05-30",
+      "titulo": "Menú del Sábado",
+      "precio": 25,
+      "entradas": ["Solterito de Queso", "Chicharrón de Camarón"],
+      "fondos": ["Cuy Chactado", "Costillar al Horno Picantero", "Trucha Andina a la Macho", "Doble Arequipeño"],
+      "bebida": "Limonada de Muña"
+    }
+  ]
 }
