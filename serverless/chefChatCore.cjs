@@ -1,12 +1,54 @@
+const crypto = require('node:crypto');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const DATA_DIR = path.resolve(__dirname, '..', 'data');
 const DEFAULT_MODEL = 'gpt-4.1-mini';
+const MAX_HISTORY_MESSAGES = 10;
+const SESSION_TTL_MS = 1000 * 60 * 60 * 2;
+
+const sessionStore = globalThis.__chefChatSessions || new Map();
+globalThis.__chefChatSessions = sessionStore;
 
 async function readJson(fileName) {
   const text = await fs.readFile(path.join(DATA_DIR, fileName), 'utf8');
   return JSON.parse(text);
+}
+
+function createSessionId() {
+  return crypto.randomUUID();
+}
+
+function normalizeSessionId(sessionId) {
+  const value = String(sessionId || '').trim();
+  return /^[a-zA-Z0-9_-]{12,80}$/.test(value) ? value : createSessionId();
+}
+
+function pruneSessions() {
+  const now = Date.now();
+  for (const [id, session] of sessionStore.entries()) {
+    if (!session || now - session.updatedAt > SESSION_TTL_MS) {
+      sessionStore.delete(id);
+    }
+  }
+}
+
+function getSession(sessionId) {
+  pruneSessions();
+  const id = normalizeSessionId(sessionId);
+  if (!sessionStore.has(id)) {
+    sessionStore.set(id, { history: [], updatedAt: Date.now() });
+  }
+  return { id, session: sessionStore.get(id) };
+}
+
+function saveSessionMessage(session, role, content) {
+  session.history.push({
+    role,
+    content: String(content || '').slice(0, 1200)
+  });
+  session.history = session.history.slice(-MAX_HISTORY_MESSAGES);
+  session.updatedAt = Date.now();
 }
 
 function compactMenu(menuData) {
@@ -20,37 +62,59 @@ function compactMenu(menuData) {
   }));
 }
 
-function buildSystemPrompt(menuData, menuDia) {
+function compactMenuDia(menuDia) {
+  const entradas = menuDia?.entradas || (menuDia?.entrada ? [menuDia.entrada] : []);
+  const fondos = menuDia?.fondos || (menuDia?.fondo ? [menuDia.fondo] : []);
+
+  return {
+    disponible: Boolean(menuDia?.disponible),
+    precio: menuDia?.precio,
+    titulo: menuDia?.titulo || 'Menu del dia',
+    subtitulo: menuDia?.subtitulo || '',
+    entradas: entradas.map((item) => ({
+      nombre: item.nombre,
+      descripcion: item.descripcion
+    })),
+    fondos: fondos.map((item) => ({
+      nombre: item.nombre,
+      descripcion: item.descripcion
+    })),
+    bebida: menuDia?.bebida
+      ? {
+          nombre: menuDia.bebida.nombre,
+          descripcion: menuDia.bebida.descripcion
+        }
+      : null,
+    nota: menuDia?.nota || ''
+  };
+}
+
+function buildSystemPrompt(menuData, menuDia, availability) {
   const negocio = menuData.negocio || {};
-  const entradasDia = menuDia?.entradas || (menuDia?.entrada ? [menuDia.entrada] : []);
-  const fondosDia = menuDia?.fondos || (menuDia?.fondo ? [menuDia.fondo] : []);
-  const menuDiaTexto = menuDia && menuDia.disponible
-    ? `Menu del dia disponible: ${menuDia.titulo || 'Menu del dia'} por ${negocio.moneda || 'S/'} ${menuDia.precio}. El cliente elige 1 entrada entre: ${entradasDia.map((item) => item.nombre).join(', ')}. Elige 1 fondo entre: ${fondosDia.map((item) => item.nombre).join(', ')}. Bebida: ${menuDia.bebida?.nombre}. Nota: ${menuDia.nota || 'sin nota'}.`
-    : 'El menu del dia no esta disponible o esta agotado.';
+  const menuDiaCompacto = compactMenuDia(menuDia);
   const cartaTexto = JSON.stringify(compactMenu(menuData));
+  const menuDiaTexto = JSON.stringify(menuDiaCompacto);
+  const availabilityTexto = JSON.stringify(availability || {});
 
   return [
-    `Eres el Chef IA de ${negocio.nombre || 'el restaurante'}, un anfitrion gastronomico con personalidad calida, curiosa y vendedora.`,
-    'Responde en espanol latino, con tono cercano, elegante y breve. Evita sonar robotico o insistente.',
-    'Puedes conversar sobre casi cualquier tema cotidiano que el usuario traiga: trabajo, estudios, clima, celebraciones, cansancio, planes, deportes, viajes, antojos, emociones o dudas generales.',
-    'Tu objetivo comercial es hacer siempre un puente natural entre el tema del usuario y un plato real del restaurante.',
-    'En cada respuesta, sigue esta estructura: 1) responde brevemente al tema del usuario, 2) conecta con una frase puente natural, 3) recomienda un plato especifico de la carta o el menu del dia, 4) explica por que encaja, 5) cierra invitando a pedir o consultar por WhatsApp cuando tenga sentido.',
-    'El puente debe sentirse organico. Ejemplos: "Hablando de algo reconfortante...", "Si ese plan pide algo con energia...", "Para acompanar ese antojo...", "Eso suena a dia para...".',
-    'Recomienda solamente platos que existan en la carta o el menu del dia. No inventes platos, precios, ingredientes, promociones ni disponibilidad.',
-    'Si el usuario pide comparar, elegir, celebrar o resolver un antojo, recomienda maximo 2 opciones. Si pregunta algo amplio o fuera de restaurante, recomienda 1 opcion clara.',
-    'Si el usuario pregunta por horario, ubicacion, delivery, pagos, pedidos o reservas, responde el dato y tambien sugiere un plato o menu apropiado.',
-    'Si el usuario pide algo peligroso, ilegal, medico, legal o financiero de alto impacto, no des instrucciones riesgosas; responde con cautela y haz un puente amable hacia comida o una opcion reconfortante.',
-    'Si el usuario quiere reservar, pedir, confirmar disponibilidad o hablar con una persona, invitalo a WhatsApp.',
-    'Si no sabes algo, dilo con naturalidad y conecta con una recomendacion de la carta.',
-    'No repitas siempre la misma formula. Cambia el tipo de puente y la recomendacion segun el contexto.',
+    `Eres el Chef IA de ${negocio.nombre || 'el restaurante'}, un anfitrion gastronomico calido, humano y vendedor.`,
+    'Responde siempre en espanol latino. Usa frases cortas, naturales y amables. Maximo 120 palabras salvo que el cliente pida detalles.',
+    'Puedes conversar sobre temas cotidianos, pero siempre debes construir un puente natural hacia un plato real, el menu del dia, una reserva o un pedido.',
+    'Objetivo de negocio: orientar hacia venta, pedido, reserva o consulta por WhatsApp sin sonar insistente.',
+    'Estructura recomendada: 1) responde al mensaje del cliente, 2) conecta con una recomendacion de la carta o menu del dia, 3) cierra con una invitacion clara a pedir, reservar o confirmar disponibilidad.',
+    'No inventes platos, precios, ingredientes, promociones, horarios ni disponibilidad. Usa solo la carta, el menu del dia y availability.json.',
+    'Si un plato aparece como agotado, no lo recomiendes. Si aparece como limitado, recomienda confirmar disponibilidad por WhatsApp.',
+    'Si el cliente quiere reservar, pedir, confirmar stock, delivery o hablar con una persona, invitalo a WhatsApp.',
+    'Si el usuario pregunta algo peligroso, ilegal, medico, legal o financiero de alto impacto, responde con cautela y redirige con tacto hacia comida o atencion humana.',
     `Datos del negocio: WhatsApp ${negocio.whatsapp || 'no configurado'}, ubicacion ${negocio.ubicacion || 'no configurada'}, horario ${negocio.horario || 'no configurado'}, Instagram ${negocio.instagram || 'no configurado'}.`,
-    menuDiaTexto,
-    `Carta JSON resumida: ${cartaTexto}`
+    `Carta general JSON resumida: ${cartaTexto}`,
+    `Menu del dia JSON: ${menuDiaTexto}`,
+    `Disponibilidad JSON: ${availabilityTexto}`
   ].join('\n');
 }
 
 function historyToInput(history, message) {
-  const safeHistory = Array.isArray(history) ? history.slice(-8) : [];
+  const safeHistory = Array.isArray(history) ? history.slice(-MAX_HISTORY_MESSAGES) : [];
   const input = safeHistory
     .filter((item) => item && (item.role === 'user' || item.role === 'assistant') && item.content)
     .map((item) => ({
@@ -75,8 +139,9 @@ function extractResponseText(data) {
   return parts.join('\n').trim();
 }
 
-async function handleChefChat({ message, history } = {}) {
-  if (!message || !String(message).trim()) {
+async function handleChefChat({ message, sessionId } = {}) {
+  const cleanMessage = String(message || '').trim();
+  if (!cleanMessage) {
     const error = new Error('Mensaje vacio');
     error.statusCode = 400;
     throw error;
@@ -88,9 +153,12 @@ async function handleChefChat({ message, history } = {}) {
     throw error;
   }
 
-  const [menuData, menuDia] = await Promise.all([
+  const { id, session } = getSession(sessionId);
+
+  const [menuData, menuDia, availability] = await Promise.all([
     readJson('menu.json'),
-    readJson('menu-dia.json')
+    readJson('menu-dia.json'),
+    readJson('availability.json')
   ]);
 
   const response = await fetch('https://api.openai.com/v1/responses', {
@@ -101,10 +169,10 @@ async function handleChefChat({ message, history } = {}) {
     },
     body: JSON.stringify({
       model: process.env.OPENAI_MODEL || DEFAULT_MODEL,
-      instructions: buildSystemPrompt(menuData, menuDia),
-      input: historyToInput(history, message),
-      temperature: 0.4,
-      max_output_tokens: 450
+      instructions: buildSystemPrompt(menuData, menuDia, availability),
+      input: historyToInput(session.history, cleanMessage),
+      temperature: 0.45,
+      max_output_tokens: 360
     })
   });
 
@@ -115,7 +183,16 @@ async function handleChefChat({ message, history } = {}) {
     throw error;
   }
 
-  return extractResponseText(data) || 'Puedo conversar contigo y llevar la idea a algo rico de nuestra carta. Hablando de antojos, te recomendaria revisar el menu del dia o un Rocoto Relleno Heredia. ¿Quieres que lo pidamos por WhatsApp?';
+  const reply = extractResponseText(data) ||
+    'Te recomiendo revisar el Menú del Día o un Rocoto Relleno Heredia. Si quieres, lo confirmamos por WhatsApp.';
+
+  saveSessionMessage(session, 'user', cleanMessage);
+  saveSessionMessage(session, 'assistant', reply);
+
+  return {
+    reply,
+    sessionId: id
+  };
 }
 
 module.exports = { handleChefChat };
