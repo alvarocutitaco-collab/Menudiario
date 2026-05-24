@@ -1,8 +1,0 @@
-[build]
-  publish = "."
-  functions = "netlify/functions"
-
-[[redirects]]
-  from = "/api/chef-chat"
-  to = "/.netlify/functions/chef-chat"
-  status = 200
