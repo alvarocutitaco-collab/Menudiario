@@ -651,6 +651,9 @@ async function handleFreeQuery(query) {
     aiButton.disabled = false;
   }
 
+  displayIaTextResult(`Chef IA responde a "${query}"`, fallbackBridgeResponse(query));
+  return;
+
   const normalizedQuery = query.toLowerCase();
   // Mapeo de palabras clave
   const keyMap = {
@@ -749,103 +752,148 @@ function displayIaTextResult(titulo, text) {
 
 /* ─── CHATBOT ───────────────────────────────────────────────────────── */
 function fallbackBridgeResponse(message = '') {
-  const lower = message.toLowerCase();
-  const wantsReservation = [
-    'reserv', 'mesa', 'separ', 'quiero ir', 'me interesa', 'somos', 'personas',
-    'para hoy', 'para mañana', 'viernes', 'sabado', 'sábado', 'domingo',
-    'hora', 'p.m', 'pm', 'a las'
-  ].some(word => lower.includes(word));
+    const normalize = (value) => String(value || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const normalized = normalize(message);
+    const lower = normalized;
+    const wantsReservation = [
+      'reserv', 'mesa', 'separ', 'quiero ir', 'me interesa', 'somos', 'personas',
+      'para hoy', 'para manana', 'viernes', 'sabado', 'domingo', 'hora', 'pm', 'a las'
+    ].some(word => lower.includes(word));
 
-  const normalize = (value) => String(value || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  const normalized = normalize(message);
-  const queryWords = normalized
-    .split(/[^a-z0-9ñ]+/i)
-    .filter(word => word.length > 2 && !['algo', 'con', 'para', 'quiero', 'tengo', 'estoy'].includes(word));
+    const hasAny = (words) => words.some(word => lower.includes(word));
+    const hasNumberGroup = /\b([3-9]|1[0-9])\b/.test(lower);
+    const needsDrink = hasAny(['sed', 'tomar', 'bebida', 'refresco', 'hidratar', 'calor', 'sol', 'queme']);
+    const wantsSoft = hasAny(['suave', 'ligero', 'liviano', 'delicado', 'novia', 'pareja', 'cita']);
+    const wantsFilling = hasAny(['llene', 'llenar', 'hambre', 'almuerzo', 'examen', 'energia', 'fuerza', 'contundente']);
+    const wantsBreakfast = hasAny(['desayuno', 'manana', 'rapido', 'apurado', 'carro', 'dejo']);
+    const isColdGroup = hasAny(['frio', 'helado']) || hasAny(['amigos', 'grupo', 'familia', 'personas']) || hasNumberGroup;
+    const wantsCheese = hasAny(['queso', 'cremoso', 'crema']);
+    const wantsSweet = hasAny(['dulce', 'postre', 'torta', 'chocolate']);
+    const wantsSpicy = hasAny(['picante', 'rocoto', 'aji']);
+    const wantsSea = hasAny(['mar', 'marino', 'camaron', 'pescado', 'trucha']);
 
-  const scorePlate = (plato) => {
-    const haystack = normalize([
-      plato.nombre,
-      plato.descripcion,
-      plato.categoria,
-      ...(plato.tags || []),
-      ...(plato.extras || [])
-    ].join(' '));
-    return queryWords.reduce((score, word) => score + (haystack.includes(word) ? 1 : 0), 0);
-  };
-
-  let plato = MENU
-    .map(p => ({ plato: p, score: scorePlate(p) }))
-    .filter(item => item.score > 0)
-    .sort((a, b) => b.score - a.score || a.plato.precio - b.plato.precio)[0]?.plato;
-
-  const preferTags = [
-    ['sueño', 'fresco'],
-    ['sueno', 'fresco'],
-    ['jefe', 'contundente'],
-    ['grit', 'contundente'],
-    ['jalé', 'dulce'],
-    ['jale', 'dulce'],
-    ['curso', 'dulce'],
-    ['sol', 'fresco'],
-    ['quemé', 'fresco'],
-    ['queme', 'fresco'],
-    ['carro', 'contundente'],
-    ['dej', 'contundente'],
-    ['personas', 'compartir'],
-    ['cansado', 'contundente'],
-    ['trabajo', 'contundente'],
-    ['frio', 'contundente'],
-    ['frío', 'contundente'],
-    ['calor', 'fresco'],
-    ['playa', 'marino'],
-    ['mar', 'marino'],
-    ['familia', 'compartir'],
-    ['amigos', 'compartir'],
-    ['celebr', 'especial'],
-    ['dulce', 'dulce'],
-    ['postre', 'dulce'],
-    ['picante', 'picante'],
-    ['antojo', 'especial']
-  ];
-  const tag = (preferTags.find(([word]) => lower.includes(word)) || [null, 'clasico'])[1];
-  if (!plato) plato = MENU.find(p => (p.tags || []).includes(tag)) || MENU[0];
-
-  const openings = [
-    'Te capto 😄',
-    'Eso tiene arreglo gastronómico.',
-    'Ya, esa escena pide algo rico.',
-    'Entendido, vamos a llevar eso a la mesa.',
-    'Buen antojo, por ahí hay una buena ruta.'
-  ];
-  const opening = openings[Math.floor(Math.random() * openings.length)];
-
-  const contextLines = [
-    normalized.includes('sueno') ? 'Si estás con sueño, mejor algo sabroso pero no pesadísimo.' : '',
-    normalized.includes('queso') ? 'Si el antojo va por queso, hay opciones cremosas y bien arequipeñas.' : '',
-    normalized.includes('frio') ? 'Con frío, provoca algo que caliente el ánimo.' : '',
-    normalized.includes('calor') ? 'Con calor, algo fresco y una bebida fría entran perfecto.' : '',
-    normalized.includes('jefe') || normalized.includes('grit') ? 'Después de un mal rato, se vale bajar revoluciones con algo rico.' : '',
-    normalized.includes('persona') || normalized.includes('somos') ? 'Si vienen varios, conviene pensar en algo para compartir.' : ''
-  ].filter(Boolean);
-  const context = contextLines[0] || 'Te recomiendo ir por algo con sabor de casa, sin complicarlo.';
-
-  if (!plato) {
-    if (wantsReservation) {
-      return 'Me gusta ese plan 😌 Para ver disponibilidad real, dime fecha, hora y cuántas personas serían.';
+    const prefer = [];
+    const avoid = [];
+    if (needsDrink) {
+      prefer.push('bebida', 'fresco', 'sed', 'calor', 'citrico');
+      avoid.push('contundente', 'frito', 'plato de fondo', 'mucha hambre solo');
     }
-    return `${opening} ${context} ¿Prefieres algo ligero o contundente?`;
+    if (wantsSoft) {
+      prefer.push('suave', 'ligero', 'pareja', 'cremoso', 'fresco', 'delicado');
+      avoid.push('contundente', 'frito', 'picante fuerte', 'visceras', 'potente');
+    }
+    if (wantsFilling) {
+      prefer.push('contundente', 'almuerzo', 'hambre', 'reconfortante', 'caliente');
+      avoid.push('bebida', 'postre', 'algo ligero', 'sed');
+    }
+    if (wantsBreakfast) {
+      prefer.push('desayuno', 'rapido', 'reconfortante', 'calido', 'tradicional');
+      avoid.push('postre', 'bebida', 'marino');
+    }
+    if (isColdGroup) prefer.push('caliente', 'compartir', 'amigos', 'grupo', 'reconfortante');
+    if (wantsCheese) prefer.push('queso', 'cremoso', 'suave');
+    if (wantsSweet) prefer.push('dulce', 'postre', 'cierre');
+    if (wantsSpicy) prefer.push('picante', 'rocoto');
+    if (wantsSea) prefer.push('marino', 'camaron', 'pescado');
+
+    const queryWords = lower
+      .split(/[^a-z0-9n]+/i)
+      .filter(word => word.length > 2 && !['algo', 'con', 'para', 'quiero', 'tengo', 'estoy', 'esta', 'una', 'uno'].includes(word));
+
+    const profileWords = (plato) => {
+      const perfil = plato.perfil || {};
+      return [
+        perfil.intensidad,
+        ...(perfil.temperatura || []),
+        ...(perfil.momento || []),
+        ...(perfil.ocasion || []),
+        ...(perfil.sensacion || []),
+        ...(perfil.idealPara || []),
+        ...(perfil.evitarSi || [])
+      ];
+    };
+
+    const scorePlate = (plato) => {
+      const perfil = plato.perfil || {};
+      const haystack = normalize([
+        plato.nombre,
+        plato.descripcion,
+        plato.categoria,
+        ...(plato.tags || []),
+        ...(plato.extras || []),
+        ...profileWords(plato)
+      ].join(' '));
+
+      let score = queryWords.reduce((total, word) => total + (haystack.includes(word) ? 2 : 0), 0);
+      score += prefer.reduce((total, word) => total + (haystack.includes(normalize(word)) ? 5 : 0), 0);
+      score -= avoid.reduce((total, word) => total + (haystack.includes(normalize(word)) ? 7 : 0), 0);
+
+      if (needsDrink) score += plato.categoria === 'Bebidas' ? 18 : -12;
+      if (wantsFilling) score += plato.categoria !== 'Bebidas' && plato.categoria !== 'Postres' ? 8 : -14;
+      if (wantsSoft && !needsDrink && plato.categoria === 'Bebidas') score -= 8;
+      if (wantsBreakfast) score += (perfil.momento || []).includes('desayuno') ? 14 : 0;
+      if (wantsSoft && perfil.intensidad === 'suave') score += 12;
+      if (wantsSoft && perfil.intensidad === 'contundente') score -= 14;
+      if (isColdGroup && (perfil.temperatura || []).includes('caliente')) score += 6;
+      if (hasNumberGroup && (perfil.ocasion || []).includes('compartir')) score += 8;
+      if (wantsCheese && haystack.includes('queso')) score += 10;
+      return score;
+    };
+
+    let plato = MENU
+      .map(p => ({ plato: p, score: scorePlate(p) }))
+      .sort((a, b) => b.score - a.score || a.plato.precio - b.plato.precio)[0]?.plato;
+
+    if (!plato || scorePlate(plato) < 1) {
+      plato = MENU.find(p => (p.perfil?.intensidad === 'suave' && p.categoria !== 'Bebidas')) || MENU[0];
+    }
+
+    let opening = 'Te entiendo.';
+    let context = 'Te llevo a una opcion con sentido, no a una recomendacion al azar.';
+    let close = 'Quieres que te sugiera una segunda opcion o lo llevamos a WhatsApp?';
+
+    if (needsDrink) {
+      opening = 'Uff, si hay sed de por medio, primero hidratamos; no te voy a mandar de frente a un plato pesado.';
+      context = 'Para refrescarte y seguir con algo rico despues, iria por una bebida fresca.';
+      close = 'La quieres mas citrica o mas suave?';
+    } else if (wantsSoft) {
+      opening = 'Buena jugada: si es para tu novia o para algo suave, mejor algo amable, cremoso y sin golpe fuerte.';
+      context = 'Aqui conviene una opcion delicada, con sabor arequipeno pero facil de disfrutar.';
+      close = 'Prefieren algo cremoso o algo fresco?';
+    } else if (wantsFilling) {
+      opening = 'Con examen o un dia largo, ahi si necesitas comida que sostenga, no una cosita testimonial.';
+      context = 'Te conviene un fondo sabroso, caliente y con energia para seguir el dia.';
+      close = 'Lo quieres mas casero o mas potente?';
+    } else if (wantsBreakfast) {
+      opening = 'Que mala pasada lo del carro. Para un desayuno rapido, la idea es algo de casa, caliente y sin complicarte mas.';
+      context = 'Me iria por una opcion tradicional que levante el animo y te deje operativo.';
+      close = 'Quieres que sea rapido para llevar o para comer aqui?';
+    } else if (isColdGroup) {
+      opening = 'Con frio y gente reunida, la mesa pide algo caliente y compartible.';
+      context = 'Lo mejor es algo que abrace un poco y alcance para conversar rico.';
+      close = 'Son para compartir al centro o cada uno quiere su plato?';
+    } else if (hasAny(['jefe', 'grit', 'estres', 'cansado', 'sueno'])) {
+      opening = 'Ufff, ese tipo de dia merece bajar revoluciones con algo rico.';
+      context = 'Te recomendaria algo reconfortante, sabroso y sin hacerlo complicado.';
+      close = 'Quieres algo suave para recuperar energia o algo contundente para reiniciar el dia?';
+    }
+
+    if (!plato) {
+      if (wantsReservation) {
+        return 'Me gusta ese plan. Para ver disponibilidad real, dime fecha, hora y cuantas personas serian.';
+      }
+      return `${opening} ${context} Prefieres algo ligero o contundente?`;
+    }
+
+    if (wantsReservation) {
+      return `${opening} Para esa experiencia te recomendaria *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. Para revisar disponibilidad, dime fecha, hora y cuantas personas serian.`;
+    }
+
+    return `${opening} ${context} Te recomendaria *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ${close}`;
   }
-
-  if (wantsReservation) {
-    return `${opening} Para esa experiencia te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. Para revisar disponibilidad, dime fecha, hora y cuántas personas serían.`;
-  }
-
-  return `${opening} ${context} Te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Quieres que te sugiera una bebida o prefieres ver otra opción?`;
-}
-
 const CHATBOT_RESPONSES = {
   horarios: () =>
     `⏱ *Horario de atención:*\n${CONFIG.horario}\n\n¿Hay algo más en que pueda ayudarte?`,

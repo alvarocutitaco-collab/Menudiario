@@ -35,7 +35,38 @@
         "Con huevo duro",
         "Sin maní"
       ],
-      "imagen": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "ambiente"
+        ],
+        "momento": [
+          "entrada",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "pareja",
+          "ligero",
+          "tradicional"
+        ],
+        "sensacion": [
+          "cremoso",
+          "suave",
+          "clasico"
+        ],
+        "idealPara": [
+          "algo suave",
+          "antojo con queso",
+          "entrada ligera",
+          "primera cita"
+        ],
+        "evitarSi": [
+          "mucha hambre",
+          "sed",
+          "desayuno rapido"
+        ]
+      }
     },
     {
       "id": 2,
@@ -56,7 +87,38 @@
         "Sin cebolla",
         "Rocoto aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio",
+          "ambiente"
+        ],
+        "momento": [
+          "entrada",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "pareja",
+          "calor",
+          "ligero"
+        ],
+        "sensacion": [
+          "fresco",
+          "vegetariano",
+          "suave"
+        ],
+        "idealPara": [
+          "algo fresco",
+          "algo suave para mi novia",
+          "comer ligero",
+          "dia caluroso"
+        ],
+        "evitarSi": [
+          "mucha hambre",
+          "frio intenso"
+        ]
+      }
     },
     {
       "id": 3,
@@ -76,7 +138,33 @@
         "Sin picante",
         "Con queso fresco"
       ],
-      "imagen": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "ambiente"
+        ],
+        "momento": [
+          "entrada"
+        ],
+        "ocasion": [
+          "clasico",
+          "picante"
+        ],
+        "sensacion": [
+          "picante",
+          "rustico"
+        ],
+        "idealPara": [
+          "antojo picante",
+          "clasico arequipeno"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "para ninos",
+          "sin picante"
+        ]
+      }
     },
     {
       "id": 4,
@@ -96,7 +184,35 @@
         "Sin cebolla",
         "Más limón"
       ],
-      "imagen": "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "ambiente"
+        ],
+        "momento": [
+          "entrada"
+        ],
+        "ocasion": [
+          "clasico",
+          "picanteria"
+        ],
+        "sensacion": [
+          "acido",
+          "picante",
+          "visceras"
+        ],
+        "idealPara": [
+          "entrada con caracter",
+          "antojo tradicional fuerte"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "pareja delicada",
+          "desayuno rapido",
+          "sed"
+        ]
+      }
     },
     {
       "id": 5,
@@ -116,7 +232,37 @@
         "Sin ají",
         "Pan de tres puntas"
       ],
-      "imagen": "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "entrada",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "pareja",
+          "frio",
+          "antojo de queso"
+        ],
+        "sensacion": [
+          "cremoso",
+          "calido",
+          "suave"
+        ],
+        "idealPara": [
+          "algo suave",
+          "algo con queso",
+          "frio",
+          "mi novia quiere algo suave"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo muy ligero"
+        ]
+      }
     },
     {
       "id": 6,
@@ -136,7 +282,36 @@
         "Sin ají",
         "Choclo adicional"
       ],
-      "imagen": "https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "entrada",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "calor",
+          "marino",
+          "ligero"
+        ],
+        "sensacion": [
+          "fresco",
+          "marino",
+          "citrico"
+        ],
+        "idealPara": [
+          "calor",
+          "algo fresco",
+          "mariscos suaves"
+        ],
+        "evitarSi": [
+          "frio",
+          "algo caliente"
+        ]
+      }
     },
     {
       "id": 7,
@@ -156,7 +331,34 @@
         "Sin picante",
         "Yuca adicional"
       ],
-      "imagen": "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "compartir",
+          "marino"
+        ],
+        "sensacion": [
+          "frito",
+          "crujiente",
+          "marino"
+        ],
+        "idealPara": [
+          "antojo marino crocante",
+          "compartir con amigos"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "comida ligera",
+          "mi novia quiere algo suave"
+        ]
+      }
     },
     {
       "id": 8,
@@ -176,7 +378,36 @@
         "Sin picante",
         "Extra queso"
       ],
-      "imagen": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "entrada",
+          "snack"
+        ],
+        "ocasion": [
+          "compartir",
+          "rapido",
+          "amigos"
+        ],
+        "sensacion": [
+          "crujiente",
+          "queso",
+          "picante leve"
+        ],
+        "idealPara": [
+          "para compartir",
+          "algo rapido",
+          "grupo"
+        ],
+        "evitarSi": [
+          "sed",
+          "almuerzo contundente"
+        ]
+      }
     },
     {
       "id": 9,
@@ -197,7 +428,34 @@
         "Más pastel de papa",
         "Picante moderado"
       ],
-      "imagen": "https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "clasico",
+          "experiencia arequipena"
+        ],
+        "sensacion": [
+          "picante",
+          "relleno",
+          "potente"
+        ],
+        "idealPara": [
+          "clasico arequipeno",
+          "mucha hambre"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sin picante",
+          "comida ligera"
+        ]
+      }
     },
     {
       "id": 10,
@@ -218,7 +476,36 @@
         "Sin leche",
         "Picante extra"
       ],
-      "imagen": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "frio",
+          "reconfortante",
+          "marino"
+        ],
+        "sensacion": [
+          "caldo",
+          "cremoso",
+          "abundante"
+        ],
+        "idealPara": [
+          "hace frio",
+          "mucha hambre",
+          "almuerzo potente",
+          "despues de un mal dia"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo ligero"
+        ]
+      }
     },
     {
       "id": 11,
@@ -238,7 +525,36 @@
         "Más caldo",
         "Picante al costado"
       ],
-      "imagen": "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "desayuno",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "desayuno rapido",
+          "reconfortante",
+          "tradicional"
+        ],
+        "sensacion": [
+          "jugoso",
+          "calido",
+          "sabroso"
+        ],
+        "idealPara": [
+          "desayuno arequipeno",
+          "me dejo el carro y quiero desayuno rapido",
+          "necesito energia"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 12,
@@ -258,7 +574,33 @@
         "Sarsa extra",
         "Término más dorado"
       ],
-      "imagen": "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "hambre",
+          "tradicional"
+        ],
+        "sensacion": [
+          "dorado",
+          "carnoso"
+        ],
+        "idealPara": [
+          "mucha hambre",
+          "almuerzo contundente"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "vegetariano",
+          "sed"
+        ]
+      }
     },
     {
       "id": 13,
@@ -278,7 +620,36 @@
         "Salsa aparte",
         "Más dorado"
       ],
-      "imagen": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo",
+          "cena"
+        ],
+        "ocasion": [
+          "compartir",
+          "celebracion",
+          "amigos"
+        ],
+        "sensacion": [
+          "carnoso",
+          "abundante"
+        ],
+        "idealPara": [
+          "grupo",
+          "5 amigos",
+          "celebrar",
+          "compartir"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 14,
@@ -298,7 +669,34 @@
         "Sin hierbabuena",
         "Ají aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1547592180-85f173990554?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1547592180-85f173990554?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "frio",
+          "reconfortante"
+        ],
+        "sensacion": [
+          "caldo",
+          "tradicional",
+          "potente"
+        ],
+        "idealPara": [
+          "hace frio",
+          "necesito levantarme",
+          "almuerzo que llene"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo fresco"
+        ]
+      }
     },
     {
       "id": 15,
@@ -317,7 +715,33 @@
         "Más caldo",
         "Ají al costado"
       ],
-      "imagen": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "frio",
+          "tradicional"
+        ],
+        "sensacion": [
+          "caldo",
+          "casero",
+          "potente"
+        ],
+        "idealPara": [
+          "frio fuerte",
+          "comida de casa"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 16,
@@ -336,7 +760,32 @@
         "Sin maní",
         "Picante suave"
       ],
-      "imagen": "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "reconfortante",
+          "tradicional"
+        ],
+        "sensacion": [
+          "caldo",
+          "suave",
+          "casero"
+        ],
+        "idealPara": [
+          "algo caliente sin ser pesado",
+          "frio suave"
+        ],
+        "evitarSi": [
+          "sed"
+        ]
+      }
     },
     {
       "id": 17,
@@ -356,7 +805,32 @@
         "Sin zapallo",
         "Rocoto aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1604908177522-040fd17f1cb2?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1604908177522-040fd17f1cb2?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "hambre",
+          "frio"
+        ],
+        "sensacion": [
+          "guiso",
+          "casero"
+        ],
+        "idealPara": [
+          "almuerzo que llene",
+          "dia pesado"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo ligero"
+        ]
+      }
     },
     {
       "id": 18,
@@ -376,7 +850,36 @@
         "Crema aparte",
         "Porción grande"
       ],
-      "imagen": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "entrada",
+          "acompanamiento"
+        ],
+        "ocasion": [
+          "pareja",
+          "queso",
+          "suave"
+        ],
+        "sensacion": [
+          "cremoso",
+          "suave",
+          "horneado"
+        ],
+        "idealPara": [
+          "algo suave",
+          "algo con queso",
+          "acompanar sin pesar"
+        ],
+        "evitarSi": [
+          "sed",
+          "mucha hambre solo"
+        ]
+      }
     },
     {
       "id": 19,
@@ -396,7 +899,33 @@
         "Mote adicional",
         "Más crocante"
       ],
-      "imagen": "https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "experiencia",
+          "celebracion"
+        ],
+        "sensacion": [
+          "crocante",
+          "especial"
+        ],
+        "idealPara": [
+          "experiencia arequipena",
+          "celebracion"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "rapido",
+          "sed"
+        ]
+      }
     },
     {
       "id": 20,
@@ -416,7 +945,32 @@
         "Doble queso",
         "Picante moderado"
       ],
-      "imagen": "https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "hambre",
+          "clasico"
+        ],
+        "sensacion": [
+          "picante",
+          "abundante"
+        ],
+        "idealPara": [
+          "mucha hambre",
+          "clasico potente"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sin picante"
+        ]
+      }
     },
     {
       "id": 21,
@@ -435,7 +989,34 @@
         "Papas fritas",
         "Sin ensalada"
       ],
-      "imagen": "https://images.unsplash.com/photo-1562967914-608f82629710?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1562967914-608f82629710?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "familiar",
+          "rapido",
+          "seguro"
+        ],
+        "sensacion": [
+          "familiar",
+          "suave",
+          "crocante"
+        ],
+        "idealPara": [
+          "almuerzo rapido",
+          "algo seguro",
+          "para alguien que no quiere arriesgar"
+        ],
+        "evitarSi": [
+          "sed"
+        ]
+      }
     },
     {
       "id": 22,
@@ -455,7 +1036,35 @@
         "Sarsa extra",
         "Pan adicional"
       ],
-      "imagen": "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "desayuno",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "compartir",
+          "desayuno arequipeno"
+        ],
+        "sensacion": [
+          "frito",
+          "crocante",
+          "potente"
+        ],
+        "idealPara": [
+          "desayuno contundente",
+          "grupo con hambre"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "mi novia quiere algo suave",
+          "comida ligera"
+        ]
+      }
     },
     {
       "id": 23,
@@ -474,7 +1083,33 @@
         "Más frejol",
         "Salsa aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1604908177522-040fd17f1cb2?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1604908177522-040fd17f1cb2?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "hambre",
+          "reconfortante"
+        ],
+        "sensacion": [
+          "guiso",
+          "sabroso"
+        ],
+        "idealPara": [
+          "examen y quiero que me llene",
+          "almuerzo potente",
+          "dia largo"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo suave"
+        ]
+      }
     },
     {
       "id": 24,
@@ -494,7 +1129,35 @@
         "Extra arroz",
         "Ají aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "pareja",
+          "suave",
+          "reconfortante"
+        ],
+        "sensacion": [
+          "cremoso",
+          "suave",
+          "casero"
+        ],
+        "idealPara": [
+          "mi novia quiere algo suave",
+          "algo cremoso",
+          "almuerzo amable"
+        ],
+        "evitarSi": [
+          "sed",
+          "picante fuerte"
+        ]
+      }
     },
     {
       "id": 25,
@@ -513,7 +1176,32 @@
         "Extra lomo",
         "Picante extra"
       ],
-      "imagen": "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "rapido",
+          "hambre"
+        ],
+        "sensacion": [
+          "salteado",
+          "sabroso"
+        ],
+        "idealPara": [
+          "almuerzo rapido que llene",
+          "energia para examen"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 26,
@@ -533,7 +1221,32 @@
         "Mariscos extra",
         "Sarsa criolla"
       ],
-      "imagen": "https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "marino",
+          "hambre"
+        ],
+        "sensacion": [
+          "marino",
+          "picante leve",
+          "abundante"
+        ],
+        "idealPara": [
+          "antojo marino contundente"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 27,
@@ -553,7 +1266,35 @@
         "Yuca extra",
         "Salsa aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1559847844-5315695dadae?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1559847844-5315695dadae?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo",
+          "cena"
+        ],
+        "ocasion": [
+          "pareja",
+          "marino",
+          "ligero"
+        ],
+        "sensacion": [
+          "marino",
+          "suave",
+          "especial"
+        ],
+        "idealPara": [
+          "algo suave con pescado",
+          "pareja",
+          "opcion elegante"
+        ],
+        "evitarSi": [
+          "sed"
+        ]
+      }
     },
     {
       "id": 28,
@@ -573,7 +1314,32 @@
         "Extra arroz",
         "Sin cebolla"
       ],
-      "imagen": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo"
+        ],
+        "ocasion": [
+          "hambre",
+          "antojo carnico"
+        ],
+        "sensacion": [
+          "salteado",
+          "potente"
+        ],
+        "idealPara": [
+          "mucha hambre",
+          "dia pesado"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 29,
@@ -593,7 +1359,36 @@
         "Extra parmesano",
         "Sin picante"
       ],
-      "imagen": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo",
+          "cena"
+        ],
+        "ocasion": [
+          "pareja",
+          "fusion",
+          "queso"
+        ],
+        "sensacion": [
+          "cremoso",
+          "especial",
+          "picante leve"
+        ],
+        "idealPara": [
+          "cita",
+          "algo con queso",
+          "plato diferente"
+        ],
+        "evitarSi": [
+          "sed",
+          "muy tradicional"
+        ]
+      }
     },
     {
       "id": 30,
@@ -613,7 +1408,32 @@
         "Sin rocoto",
         "Papas extra"
       ],
-      "imagen": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80",
+      "perfil": {
+        "intensidad": "contundente",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo",
+          "cena"
+        ],
+        "ocasion": [
+          "rapido",
+          "antojo moderno"
+        ],
+        "sensacion": [
+          "jugoso",
+          "potente"
+        ],
+        "idealPara": [
+          "algo rapido y llenador"
+        ],
+        "evitarSi": [
+          "algo suave",
+          "sed"
+        ]
+      }
     },
     {
       "id": 31,
@@ -632,7 +1452,36 @@
         "Extra tocino",
         "Sin canela"
       ],
-      "imagen": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "compartir",
+          "cena"
+        ],
+        "ocasion": [
+          "pareja",
+          "amigos",
+          "fusion"
+        ],
+        "sensacion": [
+          "queso",
+          "dulce-salado",
+          "divertido"
+        ],
+        "idealPara": [
+          "compartir con amigos",
+          "cita casual",
+          "antojo con queso"
+        ],
+        "evitarSi": [
+          "sed",
+          "almuerzo tradicional"
+        ]
+      }
     },
     {
       "id": 32,
@@ -652,7 +1501,36 @@
         "Palta extra",
         "Quinua extra"
       ],
-      "imagen": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "entrada",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "pareja",
+          "calor",
+          "marino"
+        ],
+        "sensacion": [
+          "fresco",
+          "suave",
+          "marino"
+        ],
+        "idealPara": [
+          "algo suave para mi novia",
+          "calor",
+          "entrada elegante"
+        ],
+        "evitarSi": [
+          "frio intenso",
+          "mucha hambre"
+        ]
+      }
     },
     {
       "id": 33,
@@ -672,7 +1550,36 @@
         "Sin leche",
         "Picante aparte"
       ],
-      "imagen": "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "almuerzo",
+          "cena"
+        ],
+        "ocasion": [
+          "pareja",
+          "fusion",
+          "marino"
+        ],
+        "sensacion": [
+          "cremoso",
+          "marino",
+          "especial"
+        ],
+        "idealPara": [
+          "cita",
+          "algo cremoso",
+          "plato elegante"
+        ],
+        "evitarSi": [
+          "sed",
+          "muy ligero"
+        ]
+      }
     },
     {
       "id": 34,
@@ -693,7 +1600,35 @@
         "Canela extra",
         "Con fresa"
       ],
-      "imagen": "https://images.unsplash.com/photo-1488900128323-21503983a07e?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1488900128323-21503983a07e?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "postre"
+        ],
+        "ocasion": [
+          "pareja",
+          "dulce",
+          "cierre"
+        ],
+        "sensacion": [
+          "dulce",
+          "cremoso",
+          "suave"
+        ],
+        "idealPara": [
+          "postre suave",
+          "para mi novia",
+          "algo dulce"
+        ],
+        "evitarSi": [
+          "mucha hambre",
+          "sed intensa"
+        ]
+      }
     },
     {
       "id": 35,
@@ -713,7 +1648,33 @@
         "Canela extra",
         "Porción familiar"
       ],
-      "imagen": "https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "caliente"
+        ],
+        "momento": [
+          "postre"
+        ],
+        "ocasion": [
+          "frio",
+          "dulce",
+          "compartir"
+        ],
+        "sensacion": [
+          "dulce",
+          "calido"
+        ],
+        "idealPara": [
+          "postre para frio",
+          "compartir"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo ligero"
+        ]
+      }
     },
     {
       "id": 36,
@@ -733,7 +1694,34 @@
         "Helado adicional",
         "Más chocolate"
       ],
-      "imagen": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&q=80",
+      "perfil": {
+        "intensidad": "medio",
+        "temperatura": [
+          "ambiente"
+        ],
+        "momento": [
+          "postre"
+        ],
+        "ocasion": [
+          "pareja",
+          "celebracion",
+          "dulce"
+        ],
+        "sensacion": [
+          "chocolate",
+          "dulce",
+          "especial"
+        ],
+        "idealPara": [
+          "celebrar",
+          "antojo dulce"
+        ],
+        "evitarSi": [
+          "sed",
+          "algo salado"
+        ]
+      }
     },
     {
       "id": 37,
@@ -753,7 +1741,34 @@
         "Sin azúcar",
         "Tamaño grande"
       ],
-      "imagen": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "bebida",
+          "almuerzo"
+        ],
+        "ocasion": [
+          "sed",
+          "tradicional",
+          "grupo"
+        ],
+        "sensacion": [
+          "bebida",
+          "fresco"
+        ],
+        "idealPara": [
+          "tengo sed",
+          "acompanar platos fuertes",
+          "grupo"
+        ],
+        "evitarSi": [
+          "quiero plato de fondo"
+        ]
+      }
     },
     {
       "id": 38,
@@ -773,7 +1788,35 @@
         "Extra miel",
         "Con jengibre"
       ],
-      "imagen": "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "bebida"
+        ],
+        "ocasion": [
+          "sed",
+          "calor",
+          "ligero"
+        ],
+        "sensacion": [
+          "bebida",
+          "citrico",
+          "fresco"
+        ],
+        "idealPara": [
+          "tengo sed",
+          "me queme con el sol",
+          "calor",
+          "bebida refrescante"
+        ],
+        "evitarSi": [
+          "quiero plato que me llene"
+        ]
+      }
     },
     {
       "id": 39,
@@ -793,7 +1836,35 @@
         "Sin azúcar",
         "Tamaño grande"
       ],
-      "imagen": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "bebida"
+        ],
+        "ocasion": [
+          "sed",
+          "calor",
+          "pareja"
+        ],
+        "sensacion": [
+          "bebida",
+          "frutal",
+          "suave"
+        ],
+        "idealPara": [
+          "mi novia quiere algo suave para tomar",
+          "tengo sed",
+          "bebida delicada"
+        ],
+        "evitarSi": [
+          "quiero plato de fondo",
+          "mucha hambre"
+        ]
+      }
     },
     {
       "id": 40,
@@ -813,7 +1884,34 @@
         "Más limón",
         "Con hielo"
       ],
-      "imagen": "https://images.unsplash.com/photo-1497534446932-c925b458314e?w=500&q=80"
+      "imagen": "https://images.unsplash.com/photo-1497534446932-c925b458314e?w=500&q=80",
+      "perfil": {
+        "intensidad": "suave",
+        "temperatura": [
+          "frio"
+        ],
+        "momento": [
+          "bebida"
+        ],
+        "ocasion": [
+          "sed",
+          "cansancio",
+          "saludable"
+        ],
+        "sensacion": [
+          "bebida",
+          "hierbas",
+          "suave"
+        ],
+        "idealPara": [
+          "tengo sed",
+          "cansancio",
+          "algo suave para tomar"
+        ],
+        "evitarSi": [
+          "quiero almuerzo que llene"
+        ]
+      }
     }
   ]
 }

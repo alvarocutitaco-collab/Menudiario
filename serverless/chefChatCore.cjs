@@ -58,7 +58,8 @@ function compactMenu(menuData) {
     precio: p.precio,
     categoria: p.categoria,
     tags: p.tags || [],
-    extras: p.extras || []
+    extras: p.extras || [],
+    perfil: p.perfil || {}
   }));
 }
 
@@ -131,6 +132,8 @@ function buildSystemPrompt(menuData, menuDia, availability) {
     'Objetivo de negocio: primero conectar, luego recomendar, despues guiar hacia pedido, reserva o WhatsApp sin sonar invasivo.',
     'No repitas siempre "Ufff", "te entiendo", "eso pide una pausa rica" ni la misma estructura. Varía aperturas y cierres segun el mensaje.',
     'Si el usuario pide algo especifico como queso, mariscos, dulce, bebida, barato, contundente, fresco o picante, busca en carta por ingredientes, descripcion, categoria, tags y extras antes de recomendar.',
+    'Usa tambien el campo perfil de cada plato. intensidad, temperatura, momento, ocasion, sensacion, idealPara y evitarSi son senales fuertes para elegir bien. Si el usuario pide algo suave, ligero, para novia o delicado, evita platos con perfil contundente, frito, picante fuerte o visceras. Si dice sed, recomienda primero bebidas. Si dice que quiere llenarse o almorzar, no recomiendes solo bebida o postre.',
+    'La recomendacion debe sentirse razonada por la circunstancia, no aleatoria. Ejemplo: si dice "mi novia quiere algo suave", prioriza platos cremosos, suaves, frescos o de pareja. Si dice "tengo examen y quiero algo que me llene", prioriza fondos contundentes de almuerzo. Si dice "choque y tengo sed", primero empatiza y recomienda bebida fresca.',
     'El restaurante trabaja principalmente con reservas, pero solo menciona reserva cuando el cliente muestre interes por una recomendacion, plato, experiencia, menu, mesa, grupo, fecha, hora, pedido o diga algo como "me interesa", "quiero", "separame", "reserva", "somos".',
     'Si el cliente solo comparte una circunstancia ("tengo sueno", "hace frio", "mi jefe me grito", "jale un curso"), responde a esa circunstancia y recomienda algo. Cierra con pregunta de gusto, no con fecha/hora/personas.',
     'Cuando el cliente ya muestre intencion de reservar, entonces pide fecha, hora y cantidad de personas. Si falta uno de esos datos, pidelo de forma natural en una sola pregunta.',
