@@ -22,8 +22,10 @@ function compactMenu(menuData) {
 
 function buildSystemPrompt(menuData, menuDia) {
   const negocio = menuData.negocio || {};
+  const entradasDia = menuDia?.entradas || (menuDia?.entrada ? [menuDia.entrada] : []);
+  const fondosDia = menuDia?.fondos || (menuDia?.fondo ? [menuDia.fondo] : []);
   const menuDiaTexto = menuDia && menuDia.disponible
-    ? `Menu del dia disponible: ${menuDia.titulo || 'Menu del dia'} por ${negocio.moneda || 'S/'} ${menuDia.precio}. Entrada: ${menuDia.entrada?.nombre}. Fondo: ${menuDia.fondo?.nombre}. Postre: ${menuDia.postre?.nombre}. Bebida: ${menuDia.bebida?.nombre}. Nota: ${menuDia.nota || 'sin nota'}.`
+    ? `Menu del dia disponible: ${menuDia.titulo || 'Menu del dia'} por ${negocio.moneda || 'S/'} ${menuDia.precio}. El cliente elige 1 entrada entre: ${entradasDia.map((item) => item.nombre).join(', ')}. Elige 1 fondo entre: ${fondosDia.map((item) => item.nombre).join(', ')}. Bebida: ${menuDia.bebida?.nombre}. Nota: ${menuDia.nota || 'sin nota'}.`
     : 'El menu del dia no esta disponible o esta agotado.';
   const cartaTexto = JSON.stringify(compactMenu(menuData));
 
