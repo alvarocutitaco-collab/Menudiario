@@ -1,17 +1,82 @@
 {
   "updatedAt": "2026-05-24",
+  "timezone": "America/Lima",
   "restaurantStatus": "open",
+  "reservationPolicy": {
+    "enabled": true,
+    "requiredFields": [
+      "nombre",
+      "whatsapp",
+      "fecha",
+      "hora",
+      "personas",
+      "plato_o_experiencia",
+      "observacion_especial"
+    ],
+    "rules": [
+      "No confirmar reserva si falta algun dato requerido.",
+      "No confirmar reserva si el horario no aparece disponible en slots.",
+      "Si el horario esta lleno, ofrecer alternativas de slots disponibles.",
+      "Si el cliente aun no quiere reservar, dejar la invitacion abierta sin presionar."
+    ]
+  },
+  "slots": [
+    {
+      "date": "2026-05-24",
+      "dayName": "domingo",
+      "times": [
+        { "time": "12:00", "capacity": 12, "reserved": 4 },
+        { "time": "13:30", "capacity": 16, "reserved": 16 },
+        { "time": "15:00", "capacity": 10, "reserved": 2 },
+        { "time": "20:00", "capacity": 8, "reserved": 8 },
+        { "time": "21:00", "capacity": 8, "reserved": 1 }
+      ]
+    },
+    {
+      "date": "2026-05-25",
+      "dayName": "lunes",
+      "times": [
+        { "time": "12:00", "capacity": 12, "reserved": 3 },
+        { "time": "13:30", "capacity": 16, "reserved": 10 },
+        { "time": "15:00", "capacity": 10, "reserved": 0 },
+        { "time": "19:30", "capacity": 10, "reserved": 4 },
+        { "time": "21:00", "capacity": 8, "reserved": 0 }
+      ]
+    },
+    {
+      "date": "2026-05-29",
+      "dayName": "viernes",
+      "times": [
+        { "time": "12:00", "capacity": 12, "reserved": 5 },
+        { "time": "13:30", "capacity": 16, "reserved": 8 },
+        { "time": "19:30", "capacity": 10, "reserved": 10 },
+        { "time": "20:00", "capacity": 8, "reserved": 8 },
+        { "time": "21:00", "capacity": 10, "reserved": 2 }
+      ]
+    },
+    {
+      "date": "2026-05-30",
+      "dayName": "sábado",
+      "times": [
+        { "time": "12:30", "capacity": 14, "reserved": 6 },
+        { "time": "14:00", "capacity": 16, "reserved": 13 },
+        { "time": "19:30", "capacity": 12, "reserved": 3 },
+        { "time": "20:00", "capacity": 10, "reserved": 6 },
+        { "time": "21:00", "capacity": 8, "reserved": 1 }
+      ]
+    }
+  ],
   "ordering": {
     "pickup": true,
     "delivery": true,
     "reservations": true,
     "deliveryNotes": "Delivery sujeto a zona y disponibilidad del equipo.",
-    "reservationNotes": "Reservas y pedidos se confirman por WhatsApp."
+    "reservationNotes": "Reservas y pedidos se confirman con datos completos."
   },
   "menuDia": {
     "available": true,
-    "remainingApprox": "Consultar por WhatsApp",
-    "notes": "El menú del día está disponible hasta agotar stock."
+    "remainingApprox": "Consultar segun fecha",
+    "notes": "El menu del dia cambia por fecha y esta disponible hasta agotar stock."
   },
   "items": {
     "soldOut": [],
@@ -25,9 +90,5 @@
       "Adobo de Chancho Mañanero",
       "Menú del Día"
     ]
-  },
-  "notes": [
-    "No prometer disponibilidad final sin invitar a confirmar por WhatsApp.",
-    "Si el cliente quiere pedir o reservar, cerrar con una invitación directa a WhatsApp."
-  ]
+  }
 }
