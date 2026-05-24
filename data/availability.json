@@ -1,0 +1,33 @@
+{
+  "updatedAt": "2026-05-24",
+  "restaurantStatus": "open",
+  "ordering": {
+    "pickup": true,
+    "delivery": true,
+    "reservations": true,
+    "deliveryNotes": "Delivery sujeto a zona y disponibilidad del equipo.",
+    "reservationNotes": "Reservas y pedidos se confirman por WhatsApp."
+  },
+  "menuDia": {
+    "available": true,
+    "remainingApprox": "Consultar por WhatsApp",
+    "notes": "El menú del día está disponible hasta agotar stock."
+  },
+  "items": {
+    "soldOut": [],
+    "limited": [
+      "Chupe de Camarones",
+      "Ceviche de Camarones del Río",
+      "Trucha Andina a la Macho"
+    ],
+    "recommendedToday": [
+      "Rocoto Relleno Heredia",
+      "Adobo de Chancho Mañanero",
+      "Menú del Día"
+    ]
+  },
+  "notes": [
+    "No prometer disponibilidad final sin invitar a confirmar por WhatsApp.",
+    "Si el cliente quiere pedir o reservar, cerrar con una invitación directa a WhatsApp."
+  ]
+}
