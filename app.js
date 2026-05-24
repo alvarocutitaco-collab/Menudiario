@@ -11,6 +11,7 @@ let MENU    = [];
 let CART    = [];    // [{platoId, nombre, precio, qty, extras:[], nota, emoji}]
 let MODAL_PLATO = null;
 let CHAT_HISTORY = [];
+let CHAT_SESSION_ID = getChefSessionId();
 
 const CHEF_CHAT_ENDPOINT = '/api/chef-chat';
 
@@ -49,6 +50,19 @@ function renderBotText(text) {
   return escapeHtml(text)
     .replace(/\*([^*]+)\*/g, '<strong>$1</strong>')
     .replace(/\n/g, '<br>');
+}
+
+function getChefSessionId() {
+  const storageKey = 'herediaChefSessionId';
+  try {
+    const existing = sessionStorage.getItem(storageKey);
+    if (existing) return existing;
+    const id = crypto.randomUUID ? crypto.randomUUID() : `chef_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    sessionStorage.setItem(storageKey, id);
+    return id;
+  } catch (error) {
+    return `chef_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  }
 }
 
 /* ─── CARGA DE DATOS ────────────────────────────────────────────────── */
@@ -904,7 +918,7 @@ async function askChefChat(message) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message,
-        history: CHAT_HISTORY.slice(-8)
+        sessionId: CHAT_SESSION_ID
       })
     });
 
@@ -912,6 +926,10 @@ async function askChefChat(message) {
 
     const data = await response.json();
     if (!data.reply) throw new Error('Respuesta vacia');
+    if (data.sessionId) {
+      CHAT_SESSION_ID = data.sessionId;
+      try { sessionStorage.setItem('herediaChefSessionId', CHAT_SESSION_ID); } catch (error) {}
+    }
 
     CHAT_HISTORY.push({ role: 'user', content: message });
     CHAT_HISTORY.push({ role: 'assistant', content: data.reply });
