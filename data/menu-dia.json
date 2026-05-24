@@ -1,0 +1,24 @@
+{
+  "fecha": "2026-05-21",
+  "disponible": true,
+  "precio": 22,
+  "titulo": "Menú del Día",
+  "subtitulo": "Cocina arequipeña de temporada · Hecho hoy por Miguel Ángel",
+  "entrada": {
+    "nombre": "Ocopa Arequipeña",
+    "descripcion": "Papa amarilla con salsa de ocopa tradicional, huacatay y maní. La entrada que nos identifica."
+  },
+  "fondo": {
+    "nombre": "Adobo de Chancho",
+    "descripcion": "Cerdo macerado en chicha de jora y ají panca, con pan de tres puntas arequipeño."
+  },
+  "postre": {
+    "nombre": "Queso Helado",
+    "descripcion": "El postre emblema de Arequipa. Crema fría de coco y canela."
+  },
+  "bebida": {
+    "nombre": "Chicha de Jora o Refresco",
+    "descripcion": "Chicha artesanal o refresco del día (a elección)."
+  },
+  "nota": "Incluye pan artesanal de cortesía · Atención de 11am a 4pm"
+}
