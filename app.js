@@ -524,10 +524,10 @@ $$('.mood-btn').forEach(btn => {
   });
 });
 
-document.getElementById('ia-buscar').addEventListener('click', () => {
-  const query = document.getElementById('ia-input').value.trim().toLowerCase();
+document.getElementById('ia-buscar').addEventListener('click', async () => {
+  const query = document.getElementById('ia-input').value.trim();
   if (!query) { toast('Escribe lo que se te antoja'); return; }
-  handleFreeQuery(query);
+  await handleFreeQuery(query);
 });
 
 document.getElementById('ia-input').addEventListener('keydown', (e) => {
@@ -540,7 +540,24 @@ function showIaRecommendation(mood, titulo) {
   displayIaResult(titulo || '✦ Te recomiendo:', result);
 }
 
-function handleFreeQuery(query) {
+async function handleFreeQuery(query) {
+  const aiButton = document.getElementById('ia-buscar');
+  const originalText = aiButton.textContent;
+  aiButton.textContent = 'Pensando...';
+  aiButton.disabled = true;
+
+  try {
+    const aiReply = await askChefChat(query);
+    if (aiReply) {
+      displayIaTextResult(`Chef IA responde a "${query}"`, aiReply);
+      return;
+    }
+  } finally {
+    aiButton.textContent = originalText;
+    aiButton.disabled = false;
+  }
+
+  const normalizedQuery = query.toLowerCase();
   // Mapeo de palabras clave
   const keyMap = {
     picante:     ['picante','ají','spicy','chile'],
@@ -555,7 +572,7 @@ function handleFreeQuery(query) {
 
   let bestMood = null, bestScore = 0;
   for (const [mood, words] of Object.entries(keyMap)) {
-    const score = words.filter(w => query.includes(w)).length;
+    const score = words.filter(w => normalizedQuery.includes(w)).length;
     if (score > bestScore) { bestScore = score; bestMood = mood; }
   }
 
@@ -564,14 +581,14 @@ function handleFreeQuery(query) {
   } else {
     // Fallback: buscar coincidencia con nombre del plato
     const matches = MENU.filter(p =>
-      p.nombre.toLowerCase().includes(query) ||
-      p.descripcion.toLowerCase().includes(query) ||
-      p.categoria.toLowerCase().includes(query)
+      p.nombre.toLowerCase().includes(normalizedQuery) ||
+      p.descripcion.toLowerCase().includes(normalizedQuery) ||
+      p.categoria.toLowerCase().includes(normalizedQuery)
     );
     if (matches.length) {
       displayIaResult(`🔍 Encontré esto para "${query}":`, matches.slice(0, 3));
     } else {
-      displayIaResult(`😅 No encontré coincidencias para "${query}"`, []);
+      displayIaTextResult(`Chef IA responde a "${query}"`, fallbackBridgeResponse(query));
     }
   }
 }
@@ -623,6 +640,17 @@ function displayIaResult(titulo, platos) {
       if (plato) { addToCart(plato, 1, [], ''); updateQtyDisplay(id); }
     });
   });
+}
+
+function displayIaTextResult(titulo, text) {
+  const container = document.getElementById('ia-result');
+  container.style.display = 'block';
+  container.innerHTML = `
+    <div class="ia-result-header">${escapeHtml(titulo)}</div>
+    <div class="ia-result-body">
+      <div class="ia-no-result" style="text-align:left;">${renderBotText(text)}</div>
+    </div>
+  `;
 }
 
 /* ─── CHATBOT ───────────────────────────────────────────────────────── */
