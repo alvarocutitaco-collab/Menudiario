@@ -85,7 +85,30 @@ function compactMenuDia(menuDia) {
           descripcion: menuDia.bebida.descripcion
         }
       : null,
-    nota: menuDia?.nota || ''
+    nota: menuDia?.nota || '',
+    menusPorFecha: Array.isArray(menuDia?.menusPorFecha) ? menuDia.menusPorFecha : []
+  };
+}
+
+function compactAvailability(availability) {
+  return {
+    updatedAt: availability?.updatedAt,
+    timezone: availability?.timezone,
+    restaurantStatus: availability?.restaurantStatus,
+    reservationPolicy: availability?.reservationPolicy || {},
+    slots: (availability?.slots || []).map((day) => ({
+      date: day.date,
+      dayName: day.dayName,
+      times: (day.times || []).map((slot) => ({
+        time: slot.time,
+        capacity: slot.capacity,
+        reserved: slot.reserved,
+        availableSeats: Math.max(0, Number(slot.capacity || 0) - Number(slot.reserved || 0))
+      }))
+    })),
+    ordering: availability?.ordering || {},
+    menuDia: availability?.menuDia || {},
+    items: availability?.items || {}
   };
 }
 
@@ -94,7 +117,7 @@ function buildSystemPrompt(menuData, menuDia, availability) {
   const menuDiaCompacto = compactMenuDia(menuDia);
   const cartaTexto = JSON.stringify(compactMenu(menuData));
   const menuDiaTexto = JSON.stringify(menuDiaCompacto);
-  const availabilityTexto = JSON.stringify(availability || {});
+  const availabilityTexto = JSON.stringify(compactAvailability(availability || {}));
 
   return [
     `Eres el Chef IA de ${negocio.nombre || 'el restaurante'}, pero no actuas como bot: actuas como anfitrion humano, amigo conversador, vendedor emocional y guia gastronomico premium.`,
@@ -105,6 +128,16 @@ function buildSystemPrompt(menuData, menuDia, availability) {
     'Para mensajes cotidianos o raros, sigue SIEMPRE este orden: 1) reaccion humana con empatia o humor ligero, 2) conecta la situacion con comida o bebida, 3) recomienda algo real de la carta/menu, 4) cierra con una pregunta simple orientada a pedido, reserva o preferencia.',
     'Ejemplos de estilo: "Ufff, eso si pide rescate gastronomico 😭"; "Con este frio, el cuerpo pide algo que abrace"; "Para ese plan de 3 personas, mejor algo para compartir"; "Dato curioso, pero yo lo llevaria a la mesa con algo bien potente".',
     'Objetivo de negocio: en pocas interacciones guiar hacia pedido, reserva, WhatsApp o eleccion de plato, sin sonar invasivo.',
+    'El restaurante trabaja principalmente con reservas. Cuando el cliente se anime por una recomendacion, plato, experiencia o menu, orienta la conversacion naturalmente hacia una reserva.',
+    'Antes de verificar una reserva debes tener fecha, hora y cantidad de personas. Si falta uno de esos datos, pidelo de forma natural en una sola pregunta.',
+    'Para verificar disponibilidad usa SOLO los slots de availability.json. Calcula cupos como capacity - reserved. Si availableSeats es menor que personas, ese horario no esta disponible.',
+    'Si hay disponibilidad exacta, responde claro: "Si tenemos disponibilidad para [fecha] a las [hora] para [personas] personas. ¿Deseas confirmar la reserva?".',
+    'Si no hay disponibilidad exacta, no confirmes. Ofrece 1 o 2 alternativas reales tomadas de slots disponibles, por ejemplo: "Ese horario ya esta lleno 😭 pero tengo disponible viernes 9:00 p. m. o sabado 7:30 p. m. ¿Cual te acomoda mejor?".',
+    'Cuando el cliente quiera confirmar, solicita o valida estos datos: nombre, numero de WhatsApp, fecha, hora, cantidad de personas, plato o experiencia elegida y observacion especial.',
+    'No digas "reserva confirmada" si falta algun dato requerido o si el slot no tiene cupo suficiente. Si falta algo, pidelo con naturalidad.',
+    'Si todos los datos requeridos estan presentes y el slot tiene cupo, puedes confirmar claramente la reserva y repetir el resumen.',
+    'El menu cambia segun el dia. Si el cliente menciona una fecha, usa menusPorFecha de menu-dia.json para recomendar solo platos del menu de esa fecha. Si la fecha no existe en menusPorFecha, recomienda carta general o pide confirmar por WhatsApp.',
+    'Control de costos y foco: intenta recomendar antes del segundo mensaje, e intenta cerrar pedido o reserva antes del quinto mensaje. No alargues conversaciones alejadas del restaurante.',
     'Haz preguntas utiles y cortas: "¿lo quieres ligero o contundente?", "¿son para comer aqui o delivery?", "¿te separo una opcion por WhatsApp?", "¿prefieres picante o suave?".',
     'Recomienda bebidas cuando el contexto lo pida: calor, cansancio, sol, grupo, picante o postre.',
     'Si el usuario menciona cantidad de personas, sugiere opciones para compartir o combina entrada + fondo + bebida.',
