@@ -1,24 +1,54 @@
 {
-  "fecha": "2026-05-21",
+  "fecha": "2026-05-24",
   "disponible": true,
   "precio": 22,
   "titulo": "Menú del Día",
-  "subtitulo": "Cocina arequipeña de temporada · Hecho hoy por Miguel Ángel",
-  "entrada": {
-    "nombre": "Ocopa Arequipeña",
-    "descripcion": "Papa amarilla con salsa de ocopa tradicional, huacatay y maní. La entrada que nos identifica."
-  },
-  "fondo": {
-    "nombre": "Adobo de Chancho",
-    "descripcion": "Cerdo macerado en chicha de jora y ají panca, con pan de tres puntas arequipeño."
-  },
-  "postre": {
-    "nombre": "Queso Helado",
-    "descripcion": "El postre emblema de Arequipa. Crema fría de coco y canela."
-  },
+  "subtitulo": "Elige 1 entrada + 1 fondo + bebida · Cocina arequipeña hecha hoy",
+  "entradas": [
+    {
+      "nombre": "Ocopa Arequipeña",
+      "descripcion": "Papa amarilla con salsa de ocopa tradicional, huacatay, maní y queso fresco.",
+      "emoji": "🥔",
+      "imagen": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80"
+    },
+    {
+      "nombre": "Solterito de Queso",
+      "descripcion": "Habitas, choclo, queso fresco, tomate, cebolla y aceituna con aliño suave de rocoto.",
+      "emoji": "🥗",
+      "imagen": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&q=80"
+    }
+  ],
+  "fondos": [
+    {
+      "nombre": "Adobo de Chancho",
+      "descripcion": "Cerdo macerado en chicha de jora, ají panca y especias, servido con pan de tres puntas.",
+      "emoji": "🍖",
+      "imagen": "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80"
+    },
+    {
+      "nombre": "Rocoto Relleno con Pastel de Papa",
+      "descripcion": "Rocoto arequipeño relleno de carne especiada, horneado con queso y acompañado de pastel de papa.",
+      "emoji": "🌶️",
+      "imagen": "https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?w=500&q=80"
+    },
+    {
+      "nombre": "Ají de Gallina Arequipeño",
+      "descripcion": "Gallina deshilachada en crema de ají amarillo, pan, queso y pecanas, con arroz y papa.",
+      "emoji": "🍛",
+      "imagen": "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=500&q=80"
+    },
+    {
+      "nombre": "Tallarín Saltado Picantero",
+      "descripcion": "Tallarines salteados al wok con carne, tomate, cebolla, ají amarillo y huacatay.",
+      "emoji": "🍝",
+      "imagen": "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&q=80"
+    }
+  ],
   "bebida": {
-    "nombre": "Chicha de Jora o Refresco",
-    "descripcion": "Chicha artesanal o refresco del día (a elección)."
+    "nombre": "Chicha de Jora o Refresco del Día",
+    "descripcion": "Bebida incluida a elección: chicha artesanal o refresco casero de temporada.",
+    "emoji": "🥤",
+    "imagen": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500&q=80"
   },
-  "nota": "Incluye pan artesanal de cortesía · Atención de 11am a 4pm"
+  "nota": "Oferta válida hasta agotar stock · Atención de 11am a 4pm"
 }
