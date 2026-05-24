@@ -751,9 +751,21 @@ function displayIaTextResult(titulo, text) {
 function fallbackBridgeResponse(message = '') {
   const lower = message.toLowerCase();
   const preferTags = [
+    ['jefe', 'contundente'],
+    ['grit', 'contundente'],
+    ['jalé', 'dulce'],
+    ['jale', 'dulce'],
+    ['curso', 'dulce'],
+    ['sol', 'fresco'],
+    ['quemé', 'fresco'],
+    ['queme', 'fresco'],
+    ['carro', 'contundente'],
+    ['dej', 'contundente'],
+    ['personas', 'compartir'],
     ['cansado', 'contundente'],
     ['trabajo', 'contundente'],
     ['frio', 'contundente'],
+    ['frío', 'contundente'],
     ['calor', 'fresco'],
     ['playa', 'marino'],
     ['mar', 'marino'],
@@ -769,10 +781,10 @@ function fallbackBridgeResponse(message = '') {
   const plato = MENU.find(p => (p.tags || []).includes(tag)) || MENU[0];
 
   if (!plato) {
-    return 'Te leo. Y para llevar esa idea a la mesa, te recomendaria revisar nuestra carta o el menu del dia. ¿Te paso una sugerencia por WhatsApp?';
+    return 'Ufff, te leo 😅 Eso merece una pausa rica. Para llevarlo a la mesa, miraría el Menú del Día o algo de la carta. ¿Quieres que te sugiera algo ligero o contundente?';
   }
 
-  return `Te leo. Y para llevar esa idea a la mesa, te recomiendo *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. Va muy bien cuando quieres algo con personalidad de casa. ¿Te lo separamos por WhatsApp?`;
+  return `Ufff, te entiendo 😅 Eso pide una pausa rica. Para levantar el ánimo, te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Lo quieres para pedir ahora o prefieres que te sugiera algo más ligero?`;
 }
 
 const CHATBOT_RESPONSES = {
