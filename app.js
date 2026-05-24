@@ -755,6 +755,32 @@ function fallbackBridgeResponse(message = '') {
     'para hoy', 'para mañana', 'viernes', 'sabado', 'sábado', 'domingo',
     'hora', 'p.m', 'pm', 'a las'
   ].some(word => lower.includes(word));
+
+  const normalize = (value) => String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const normalized = normalize(message);
+  const queryWords = normalized
+    .split(/[^a-z0-9ñ]+/i)
+    .filter(word => word.length > 2 && !['algo', 'con', 'para', 'quiero', 'tengo', 'estoy'].includes(word));
+
+  const scorePlate = (plato) => {
+    const haystack = normalize([
+      plato.nombre,
+      plato.descripcion,
+      plato.categoria,
+      ...(plato.tags || []),
+      ...(plato.extras || [])
+    ].join(' '));
+    return queryWords.reduce((score, word) => score + (haystack.includes(word) ? 1 : 0), 0);
+  };
+
+  let plato = MENU
+    .map(p => ({ plato: p, score: scorePlate(p) }))
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score || a.plato.precio - b.plato.precio)[0]?.plato;
+
   const preferTags = [
     ['sueño', 'fresco'],
     ['sueno', 'fresco'],
@@ -785,20 +811,39 @@ function fallbackBridgeResponse(message = '') {
     ['antojo', 'especial']
   ];
   const tag = (preferTags.find(([word]) => lower.includes(word)) || [null, 'clasico'])[1];
-  const plato = MENU.find(p => (p.tags || []).includes(tag)) || MENU[0];
+  if (!plato) plato = MENU.find(p => (p.tags || []).includes(tag)) || MENU[0];
+
+  const openings = [
+    'Te capto 😄',
+    'Eso tiene arreglo gastronómico.',
+    'Ya, esa escena pide algo rico.',
+    'Entendido, vamos a llevar eso a la mesa.',
+    'Buen antojo, por ahí hay una buena ruta.'
+  ];
+  const opening = openings[Math.floor(Math.random() * openings.length)];
+
+  const contextLines = [
+    normalized.includes('sueno') ? 'Si estás con sueño, mejor algo sabroso pero no pesadísimo.' : '',
+    normalized.includes('queso') ? 'Si el antojo va por queso, hay opciones cremosas y bien arequipeñas.' : '',
+    normalized.includes('frio') ? 'Con frío, provoca algo que caliente el ánimo.' : '',
+    normalized.includes('calor') ? 'Con calor, algo fresco y una bebida fría entran perfecto.' : '',
+    normalized.includes('jefe') || normalized.includes('grit') ? 'Después de un mal rato, se vale bajar revoluciones con algo rico.' : '',
+    normalized.includes('persona') || normalized.includes('somos') ? 'Si vienen varios, conviene pensar en algo para compartir.' : ''
+  ].filter(Boolean);
+  const context = contextLines[0] || 'Te recomiendo ir por algo con sabor de casa, sin complicarlo.';
 
   if (!plato) {
     if (wantsReservation) {
       return 'Me gusta ese plan 😌 Para ver disponibilidad real, dime fecha, hora y cuántas personas serían.';
     }
-    return 'Ufff, te leo 😅 Eso merece una pausa rica. Para llevarlo a la mesa, miraría el Menú del Día o algo fresco de la carta. ¿Prefieres algo ligero o contundente?';
+    return `${opening} ${context} ¿Prefieres algo ligero o contundente?`;
   }
 
   if (wantsReservation) {
-    return `Me gusta ese plan 😌 Para esa experiencia te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. Para revisar disponibilidad, dime fecha, hora y cuántas personas serían.`;
+    return `${opening} Para esa experiencia te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. Para revisar disponibilidad, dime fecha, hora y cuántas personas serían.`;
   }
 
-  return `Ufff, te entiendo 😅 Eso pide una pausa rica, no presión. Para acompañarte, te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Te provoca algo ligero y fresco o algo más contundente?`;
+  return `${opening} ${context} Te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Quieres que te sugiera una bebida o prefieres ver otra opción?`;
 }
 
 const CHATBOT_RESPONSES = {
@@ -948,7 +993,10 @@ async function askChefChat(message) {
       })
     });
 
-    if (!response.ok) throw new Error('Chef IA no disponible');
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      throw new Error(`Chef IA no disponible (${response.status}): ${errorText}`);
+    }
 
     const data = await response.json();
     if (!data.reply) throw new Error('Respuesta vacia');
