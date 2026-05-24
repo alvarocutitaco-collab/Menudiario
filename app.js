@@ -781,10 +781,10 @@ function fallbackBridgeResponse(message = '') {
   const plato = MENU.find(p => (p.tags || []).includes(tag)) || MENU[0];
 
   if (!plato) {
-    return 'Ufff, te leo 😅 Eso merece una pausa rica. Para llevarlo a la mesa, miraría el Menú del Día o algo de la carta. ¿Quieres que te sugiera algo ligero o contundente?';
+    return 'Ufff, te leo 😅 Eso merece una pausa rica. Para llevarlo a la mesa, miraría el Menú del Día o algo de la carta. ¿Para qué fecha, hora y cuántas personas te gustaría reservar?';
   }
 
-  return `Ufff, te entiendo 😅 Eso pide una pausa rica. Para levantar el ánimo, te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Lo quieres para pedir ahora o prefieres que te sugiera algo más ligero?`;
+  return `Ufff, te entiendo 😅 Eso pide una pausa rica. Para levantar el ánimo, te recomendaría *${plato.nombre}*: ${plato.descripcion.split('.')[0]}. ¿Te gustaría reservar? Dime fecha, hora y cuántas personas serían.`;
 }
 
 const CHATBOT_RESPONSES = {
